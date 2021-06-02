@@ -4,17 +4,14 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.ertreby.foodbox.R
-import kotlinx.android.synthetic.main.popular_item_list.view.card
-import kotlinx.android.synthetic.main.restaurant_item_list.view.*
+import com.ertreby.foodbox.data.Restaurant
+import com.ertreby.foodbox.databinding.RestaurantItemListBinding
 
-class RestaurantsRecyclerAdapter(val context: Context) : RecyclerView.Adapter<RestaurantsRecyclerAdapter.ViewHolder>() {
+class RestaurantsRecyclerAdapter(val context: Context,val restaurants:MutableList<Restaurant>) : RecyclerView.Adapter<RestaurantsRecyclerAdapter.ViewHolder>() {
 
 
-    val colorsIds= listOf(R.color.mcdonalds_color,R.color.starbucks_color,R.color.dominos_color)
-    val drwableIds= listOf(R.drawable.ic_mcdonald,R.drawable.ic_starbucks,R.drawable.ic_domino_s,)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view =
@@ -23,18 +20,21 @@ class RestaurantsRecyclerAdapter(val context: Context) : RecyclerView.Adapter<Re
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.itemView.card.setCardBackgroundColor(ResourcesCompat.getColor(context.resources,colorsIds[position],null))
-        val drawable=ResourcesCompat.getDrawable(context.resources,drwableIds[position],null)
-        drawable?.let { holder.itemView.icon.setImageDrawable(it) }
+        holder.binding.card.setCardBackgroundColor(restaurants[position].color)
+        holder.binding.restaurantTitle.text=restaurants[position].title
+        holder.binding.restaurantDescription.text=restaurants[position].description
+        holder.binding.ratingBar.rating=restaurants[position].rating.toFloat()
+        holder.binding.icon.setImageDrawable(restaurants[position].logoImage)
 
     }
 
     override fun getItemCount(): Int {
-        return colorsIds.size
+        return restaurants.size
     }
 
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+        val binding=RestaurantItemListBinding.bind(itemView)
     }
+
 }

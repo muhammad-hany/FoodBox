@@ -6,7 +6,6 @@ import android.text.SpannableString
 import android.text.Spanned
 import android.text.TextPaint
 import android.text.method.LinkMovementMethod
-import android.text.method.MovementMethod
 import android.text.style.ClickableSpan
 import android.view.LayoutInflater
 import android.view.View
@@ -14,14 +13,16 @@ import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import com.ertreby.foodbox.R
-import kotlinx.android.synthetic.main.fragment_sign_up.view.*
+import com.ertreby.foodbox.databinding.FragmentSignUpBinding
 
 class SignUpFragment : Fragment() {
+    lateinit var binding:FragmentSignUpBinding
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        binding= FragmentSignUpBinding.inflate(layoutInflater)
         return inflater.inflate(R.layout.fragment_sign_up, null, false)
     }
 
@@ -62,7 +63,7 @@ class SignUpFragment : Fragment() {
         text="Privacy Policy"
         index = resources.getString(R.string.terms_and_conditions_text).indexOf(text)
         spannable.setSpan(clickSpan2, index, index + text.length,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        view.checkBox.text = spannable
-        view.checkBox.movementMethod=LinkMovementMethod.getInstance()
+        binding.checkBox.text = spannable
+        binding.checkBox.movementMethod=LinkMovementMethod.getInstance()
     }
 }

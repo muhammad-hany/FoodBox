@@ -14,16 +14,19 @@ import com.ertreby.foodbox.adapters.PopularRecyclerAdapter
 import com.ertreby.foodbox.adapters.RestaurantsRecyclerAdapter
 import com.ertreby.foodbox.data.Category
 import com.ertreby.foodbox.data.PopularMeal
-import kotlinx.android.synthetic.main.fragment_home.view.*
+import com.ertreby.foodbox.data.Restaurant
+import com.ertreby.foodbox.databinding.FragmentHomeBinding
 import kotlin.random.Random
 
 class HomeFragment : Fragment() {
+    lateinit var binding: FragmentHomeBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        binding = FragmentHomeBinding.inflate(inflater)
         return inflater.inflate(R.layout.fragment_home, null, false)
     }
 
@@ -31,25 +34,50 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        createCategoryList(view)
-        createPopularList(view)
-        createRestaurantsList(view)
+        createCategoryList()
+        createPopularList()
+        createRestaurantsList()
 
 
     }
 
-    private fun createRestaurantsList(view: View) {
-        val restaurantsRecyclerView=view.restaurantsRecyclerView as RecyclerView
-        restaurantsRecyclerView.layoutManager=LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+    private fun createRestaurantsList() {
+        val titles = resources.getStringArray(R.array.restaurants_title)
+        val descriptions = resources.getStringArray(R.array.restaurants_description)
+        val colorsIds =
+            listOf(R.color.mcdonalds_color, R.color.starbucks_color, R.color.dominos_color)
+        val drawableIds =
+            listOf(R.drawable.ic_mcdonald, R.drawable.ic_starbucks, R.drawable.ic_domino_s)
+        val restaurants = mutableListOf<Restaurant>()
+        val random = Random(0)
+        titles.forEachIndexed { index, text ->
+            val drawable = ResourcesCompat.getDrawable(resources, drawableIds[index], null)
+            val color = ResourcesCompat.getColor(resources, colorsIds[index], null)
+            drawable?.let {
+                restaurants.add(
+                    Restaurant(
+                        text,
+                        descriptions[index],
+                        random.nextInt(3, 5),
+                        it,
+                        color
+                    )
+                )
+            }
+        }
+
+        val restaurantsRecyclerView = binding.restaurantsRecyclerView
+        restaurantsRecyclerView.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         context?.let {
-            val adapter= RestaurantsRecyclerAdapter(it)
-            restaurantsRecyclerView.adapter=adapter
+            val adapter = RestaurantsRecyclerAdapter(it, restaurants)
+            restaurantsRecyclerView.adapter = adapter
         }
     }
 
-    private fun createPopularList(view: View) {
-        val titles = resources.getStringArray(R.array.titles)
-        val descriptions = resources.getStringArray(R.array.descriptions)
+    private fun createPopularList() {
+        val titles = resources.getStringArray(R.array.popular_titles)
+        val descriptions = resources.getStringArray(R.array.popular_descriptions)
         val populars = mutableListOf<PopularMeal>()
         val drawableIds = listOf<Int>(
             R.drawable.stake,
@@ -64,14 +92,14 @@ class HomeFragment : Fragment() {
                     PopularMeal(
                         text,
                         descriptions[index],
-                        random.nextInt(10, 30).toString()+" $",
+                        random.nextInt(10, 30).toString() + " $",
                         random.nextInt(3, 5).toString(),
                         it
                     )
                 )
             }
         }
-        val recyclerView: RecyclerView = view.popularRecyclerView
+        val recyclerView: RecyclerView = binding.popularRecyclerView
         recyclerView.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         context?.let {
@@ -80,7 +108,7 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun createCategoryList(view: View) {
+    private fun createCategoryList() {
         val foodCategories = listOf("Burger", "Sushi", "Pizza", "Chicken", "Pasta")
         val colors = listOf(
             R.color.card1_color,
@@ -104,7 +132,7 @@ class HomeFragment : Fragment() {
             drawable?.let { foodList.add(Category(s, color, it)) }
         }
 
-        val categoryRecyclerView = view.categoryRecyclerView as RecyclerView
+        val categoryRecyclerView = binding.categoryRecyclerView as RecyclerView
         categoryRecyclerView.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         context?.let {

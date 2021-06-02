@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.ertreby.foodbox.R
 import com.ertreby.foodbox.data.Category
-import kotlinx.android.synthetic.main.category_item_list.view.*
+import com.ertreby.foodbox.databinding.CategoryItemListBinding
 
 class CategoryRecyclerAdapter(val context: Context, val categories:List<Category>) : RecyclerView.Adapter<CategoryRecyclerAdapter.ViewHolder>() {
 
@@ -20,9 +20,9 @@ class CategoryRecyclerAdapter(val context: Context, val categories:List<Category
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.itemView.card.setCardBackgroundColor(categories[position].color)
-        holder.itemView.imageLabel.text = categories[position].name
-        holder.itemView.cardImage.setImageDrawable(categories[position].drawable)
+        holder.binding.card.setCardBackgroundColor(categories[position].color)
+        holder.binding.imageLabel.text = categories[position].name
+        holder.binding.cardImage.setImageDrawable(categories[position].drawable)
     }
 
     override fun getItemCount(): Int {
@@ -31,6 +31,6 @@ class CategoryRecyclerAdapter(val context: Context, val categories:List<Category
 
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
+        val binding=CategoryItemListBinding.bind(itemView)
     }
 }
