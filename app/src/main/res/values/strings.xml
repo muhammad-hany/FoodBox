@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Food Box</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="terms_and_conditions_text">I agree to Food Box Terms and Conditions and Privacy Policy</string>
+    <string-array name="titles">
+        <item>Stake</item>
+        <item>Mashed potato casserole</item>
+        <item>Grilled potato fries</item>
+    </string-array>
+
+    <string-array name="descriptions">
+        <item>Pan-Fried Garlic Butter Steak with Crispy Potatoes and Asparagus.</item>
+        <item>Cooked in herbed half-and-half and topped with fried sage.</item>
+        <item>Grilled Potato Wedge Fries with Roasted Garlic Aioli.</item>
+    </string-array>
+</resources>

@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:motion="http://schemas.android.com/apk/res-auto">
+
+    <Transition
+        motion:constraintSetEnd="@+id/end"
+        motion:constraintSetStart="@id/start"
+        motion:duration="1000">
+       <KeyFrameSet>
+           <KeyAttribute
+               motion:motionTarget="@+id/swipe_up_icon"
+               motion:framePosition="50"
+               android:scaleY="0.5" />
+       </KeyFrameSet>
+        <OnClick motion:targetId="@id/backgroundImage" />
+        <OnSwipe motion:touchAnchorId="@+id/backgroundImage" />
+    </Transition>
+
+    <ConstraintSet android:id="@+id/start">
+        <Constraint
+            android:id="@+id/backgroundImage"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintTop_toTopOf="parent"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintVertical_bias="0.0"
+            motion:layout_constraintHorizontal_bias="0.0" >
+            <CustomAttribute
+                motion:attributeName="cornerRadius"
+                motion:customDimension="0dp" />
+        </Constraint>
+        <Constraint
+            android:id="@+id/icon_center_Image"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintTop_toTopOf="parent"
+            motion:layout_constraintStart_toStartOf="parent" />
+        <Constraint
+            android:id="@+id/textView"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintTop_toBottomOf="@+id/icon_center_Image"
+            motion:layout_constraintHorizontal_bias="0.501" />
+        <Constraint
+            android:id="@+id/editTextTextPersonName2"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="60dp"
+            motion:layout_constraintHorizontal_bias="0.0" />
+        <Constraint
+            android:layout_height="40dp"
+            android:layout_width="40dp"
+            motion:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName2"
+            android:id="@+id/swipe_up_icon"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_editor_absoluteX="68dp"
+            android:layout_marginBottom="8dp" />
+        <Constraint
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:id="@+id/imageView3" />
+        <Constraint
+            motion:layout_constraintEnd_toEndOf="@+id/editTextTextPersonName2"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            motion:layout_constraintBottom_toBottomOf="@id/editTextTextPersonName2"
+            android:layout_marginEnd="16dp"
+            motion:layout_constraintTop_toTopOf="@id/editTextTextPersonName2"
+            android:id="@+id/search_image" />
+        <Constraint
+            android:id="@+id/textView7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            motion:layout_constraintBottom_toBottomOf="@+id/editTextTextPersonName2"
+            android:layout_marginStart="16dp"
+            motion:layout_constraintTop_toTopOf="@+id/editTextTextPersonName2"
+            motion:layout_constraintStart_toStartOf="@+id/editTextTextPersonName2" />
+    </ConstraintSet>
+
+    <ConstraintSet android:id="@+id/end">
+        <Constraint
+            android:layout_height="wrap_content"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="wrap_content"
+            android:id="@+id/icon_center_Image"
+            motion:layout_constraintBottom_toTopOf="@+id/textView" />
+        <Constraint
+            android:layout_height="wrap_content"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintBottom_toTopOf="@+id/backgroundImage"
+            motion:layout_constraintHorizontal_bias="0.501"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="wrap_content"
+            android:id="@+id/textView" />
+        <Constraint
+            android:layout_marginEnd="16dp"
+            android:layout_height="wrap_content"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="0dp"
+            motion:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="16dp"
+            android:id="@+id/editTextTextPersonName2"
+            motion:layout_constraintBottom_toBottomOf="@+id/backgroundImage"
+            motion:layout_constraintTop_toTopOf="@+id/backgroundImage"
+            android:layout_marginTop="0dp"
+            motion:layout_constraintVertical_bias="0.0" />
+        <Constraint
+
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            motion:layout_constraintBottom_toBottomOf="@+id/editTextTextPersonName2"
+            motion:layout_constraintTop_toTopOf="parent"
+            motion:layout_constraintStart_toStartOf="parent"
+            android:id="@+id/backgroundImage"
+            android:layout_marginBottom="0dp" >
+            <CustomAttribute
+                motion:attributeName="cornerRadius"
+                motion:customDimension="20dp" />
+        </Constraint>
+        <Constraint
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:id="@+id/swipe_up_icon"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:alpha="0"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName2" />
+        <Constraint
+            android:layout_height="30dp"
+            motion:layout_constraintStart_toStartOf="@+id/editTextTextPersonName2"
+            motion:layout_constraintTop_toTopOf="@id/editTextTextPersonName2"
+            motion:layout_constraintBottom_toBottomOf="@id/editTextTextPersonName2"
+            android:layout_width="30dp"
+            android:id="@+id/search_image"
+            android:layout_marginStart="16dp" />
+        <Constraint
+            android:layout_height="wrap_content"
+            motion:layout_constraintTop_toTopOf="@+id/editTextTextPersonName2"
+            motion:layout_constraintBottom_toBottomOf="@+id/editTextTextPersonName2"
+            android:layout_width="wrap_content"
+            android:id="@+id/textView7"
+            motion:layout_constraintStart_toEndOf="@+id/search_image"
+            android:layout_marginStart="16dp" />
+    </ConstraintSet>
+</MotionScene>
