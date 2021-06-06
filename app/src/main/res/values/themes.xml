@@ -12,13 +12,50 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <item name="android:fontFamily">@font/sansation</item>
+        <item name="fontFamily">@font/sansation</item>
         <item name="android:textColor">@color/text_color</item>
+        <item name="buttonTint">@color/color_primary</item>
+        <item name="materialButtonStyle">@style/Button.Submit</item>
 
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="TextAppearance.Title" parent="TextAppearance.MaterialComponents.Headline4">
+        <item name="android:textSize">30sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:gravity">center</item>
+        <item name="fontFamily">@font/sansation</item>
+        <item name="android:fontFamily">@font/sansation</item>
+    </style>
 
-s
+    <style name="TextAppearance.Body" parent="TextAppearance.Title">
+        <item name="android:textSize">17sp</item>
+        <item name="android:textStyle">normal</item>
+
+    </style>
+
+    <style name="TextAppearance.Subtitle" parent="TextAppearance.Title">
+        <item name="android:textSize">20sp</item>
+    </style>
+
+
+    <style name="Button.Submit" parent="Widget.MaterialComponents.Button">
+        <item name="android:textColor">#ffff</item>
+        <item name="android:textSize">19sp</item>
+        <item name="android:padding">15dp</item>
+        <item name="textAllCaps">false</item>
+        <item name="android:textStyle">bold</item>
+        <item name="cornerRadius">15dp</item>
+
+    </style>
+
+
+
+
+
+
+
+
 
 
 

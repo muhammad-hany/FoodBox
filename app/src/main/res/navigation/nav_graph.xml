@@ -17,8 +17,8 @@
             android:id="@+id/action_splash_to_home"
             app:destination="@id/homeFragment" />
         <action
-            android:id="@+id/action_splash_to_verifiedFragment"
-            app:destination="@id/verifiedFragment" />
+            android:id="@+id/action_splash_to_cartFragment"
+            app:destination="@id/cartFragment" />
     </fragment>
     <fragment
         android:id="@+id/verificationFragment"
@@ -33,7 +33,7 @@
         android:name="com.ertreby.foodbox.fragments.HomeFragment"
         android:label="HomeFragment" />
     <fragment
-        android:id="@+id/verifiedFragment"
-        android:name="com.ertreby.foodbox.fragments.VerifiedFragment"
-        android:label="VerifiedFragment" />
+        android:id="@+id/cartFragment"
+        android:name="com.ertreby.foodbox.fragments.CartFragment"
+        android:label="CartFragment" />
 </navigation>

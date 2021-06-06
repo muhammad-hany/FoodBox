@@ -16,4 +16,5 @@ class VerifiedFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_verfied, null, false)
     }
 
+
 }

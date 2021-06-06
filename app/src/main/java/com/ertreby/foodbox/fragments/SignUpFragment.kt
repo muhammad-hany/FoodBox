@@ -22,8 +22,8 @@ class SignUpFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding= FragmentSignUpBinding.inflate(layoutInflater)
-        return inflater.inflate(R.layout.fragment_sign_up, null, false)
+        binding= FragmentSignUpBinding.inflate(layoutInflater,container,false)
+        return binding.root
     }
 
 

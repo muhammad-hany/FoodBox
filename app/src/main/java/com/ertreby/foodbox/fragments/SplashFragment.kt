@@ -23,7 +23,7 @@ import com.ertreby.foodbox.databinding.FragmentSplashBinding
 
 
 class SplashFragment : Fragment() {
-    lateinit var binding:FragmentSplashBinding
+    lateinit var binding: FragmentSplashBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity as AppCompatActivity).supportActionBar?.hide()
@@ -34,29 +34,32 @@ class SplashFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding= FragmentSplashBinding.inflate(layoutInflater)
-        val view = inflater.inflate(R.layout.fragment_splash, null, false)
-        addMotionLayoutListener(view)
-        return view
+        binding = FragmentSplashBinding.inflate(layoutInflater, container, false)
+        addMotionLayoutListener()
+        return binding.root
     }
 
     override fun onResume() {
         super.onResume()
-       // view?.let { animateImageView(it) }
+        // view?.let { animateImageView(it) }
     }
 
-    private fun addMotionLayoutListener(view: View) {
-        (binding.constrainLayout as MotionLayout).addTransitionListener(object :
+    private fun addMotionLayoutListener() {
+        (binding.constrainLayout).addTransitionListener(object :
             MotionLayout.TransitionListener {
             override fun onTransitionStarted(p0: MotionLayout?, p1: Int, p2: Int) {
                 (activity as AppCompatActivity).supportActionBar?.show()
-                (activity as AppCompatActivity).supportActionBar?.elevation=0f
+                (activity as AppCompatActivity).supportActionBar?.elevation = 0f
             }
 
             override fun onTransitionChange(p0: MotionLayout?, p1: Int, p2: Int, p3: Float) {
 
-                Log.i("MOTION","onTransitionChanged called $p3")
-                if (p3 >0.98) findNavController().navigate(R.id.action_splash_to_home)
+                Log.i("MOTION", "onTransitionChanged called $p3")
+                if (p3 > 0.98) {
+                    //findNavController().navigate(R.id.action_splash_to_home)
+                    findNavController().navigate(R.id.action_splash_to_cartFragment)
+
+                }
             }
 
             override fun onTransitionCompleted(p0: MotionLayout?, p1: Int) {
@@ -96,13 +99,14 @@ class SplashFragment : Fragment() {
                 }
 
             val bounceAnimation =
-                ObjectAnimator.ofFloat(binding.constrainLayout, View.TRANSLATION_Y, -50f, 0f).apply {
-                    interpolator = BounceInterpolator()
-                    startDelay = 500
-                    duration = 500
+                ObjectAnimator.ofFloat(binding.constrainLayout, View.TRANSLATION_Y, -50f, 0f)
+                    .apply {
+                        interpolator = BounceInterpolator()
+                        startDelay = 500
+                        duration = 500
 
 
-                }
+                    }
 
 
             val imageAnimationSet = AnimatorSet()
