@@ -9,8 +9,11 @@ import com.ertreby.foodbox.R
 import com.ertreby.foodbox.data.Category
 import com.ertreby.foodbox.databinding.CategoryItemListBinding
 
-class CategoryRecyclerAdapter(val context: Context, val categories:List<Category>) : RecyclerView.Adapter<CategoryRecyclerAdapter.ViewHolder>() {
-
+class CategoryRecyclerAdapter(
+    val context: Context,
+    val categories: List<Category>,
+    val onItemClick: (Int) -> Unit
+) : RecyclerView.Adapter<CategoryRecyclerAdapter.ViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -20,9 +23,8 @@ class CategoryRecyclerAdapter(val context: Context, val categories:List<Category
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.binding.card.setCardBackgroundColor(categories[position].color)
-        holder.binding.imageLabel.text = categories[position].name
-        holder.binding.cardImage.setImageDrawable(categories[position].drawable)
+        holder.bindView(categories[position])
+        holder.binding.card.setOnClickListener { onItemClick(position) }
     }
 
     override fun getItemCount(): Int {
@@ -31,6 +33,12 @@ class CategoryRecyclerAdapter(val context: Context, val categories:List<Category
 
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val binding=CategoryItemListBinding.bind(itemView)
+        val binding = CategoryItemListBinding.bind(itemView)
+
+        fun bindView(category:Category){
+            binding.card.setCardBackgroundColor(category.color)
+            binding.imageLabel.text = category.name
+            binding.cardImage.setImageDrawable(category.drawable)
+        }
     }
 }

@@ -1,39 +1,61 @@
 package com.ertreby.foodbox.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
+import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ertreby.foodbox.R
 import com.ertreby.foodbox.adapters.CategoryRecyclerAdapter
 import com.ertreby.foodbox.adapters.PopularRecyclerAdapter
 import com.ertreby.foodbox.adapters.RestaurantsRecyclerAdapter
-import com.ertreby.foodbox.data.Category
-import com.ertreby.foodbox.data.PopularMeal
-import com.ertreby.foodbox.data.Restaurant
+import com.ertreby.foodbox.data.*
 import com.ertreby.foodbox.databinding.FragmentHomeBinding
-import kotlin.random.Random
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.toObject
+import com.google.firebase.firestore.ktx.toObjects
+import com.google.firebase.ktx.Firebase
 
 class HomeFragment : Fragment() {
-    lateinit var binding: FragmentHomeBinding
+
+    lateinit var bind: FragmentHomeBinding
+    lateinit var db: FirebaseFirestore
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentHomeBinding.inflate(inflater,container,false)
-        return binding.root
+    ): View {
+        bind = FragmentHomeBinding.inflate(inflater, container, false)
+        return bind.root
 
     }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        startLoadingAnimation()
+
+        displayUsername()
+        bind.cartButton.setOnClickListener {
+            getUserCartFromDB()
+
+        }
+
+        bind.profileButton.setOnClickListener {
+            signOut()
+
+        }
 
         createCategoryList()
         createPopularList()
@@ -42,75 +64,107 @@ class HomeFragment : Fragment() {
 
     }
 
-    private fun createRestaurantsList() {
-        val titles = resources.getStringArray(R.array.restaurants_title)
-        val descriptions = resources.getStringArray(R.array.restaurants_description)
-        val colorsIds =
-            listOf(R.color.mcdonalds_color, R.color.starbucks_color, R.color.dominos_color)
-        val drawableIds =
-            listOf(R.drawable.ic_mcdonald, R.drawable.ic_starbucks, R.drawable.ic_domino_s)
-        val restaurants = mutableListOf<Restaurant>()
-        val random = Random(0)
-        titles.forEachIndexed { index, text ->
-            val drawable = ResourcesCompat.getDrawable(resources, drawableIds[index], null)
-            val color = ResourcesCompat.getColor(resources, colorsIds[index], null)
-            drawable?.let {
-                restaurants.add(
-                    Restaurant(
-                        text,
-                        descriptions[index],
-                        random.nextInt(3, 5),
-                        it,
-                        color
-                    )
-                )
-            }
-        }
 
-        val restaurantsRecyclerView = binding.restaurantsRecyclerView
+    private fun startLoadingAnimation() {
+        bind.scroll.visibility=View.INVISIBLE
+        val loadingAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.blink)
+        bind.loadingImage.startAnimation(loadingAnimation)
+    }
+
+
+    private fun endLoadingAnimation() {
+        bind.scroll.visibility=View.VISIBLE
+        bind.loadingImage.visibility = View.GONE
+        bind.loadingImage.clearAnimation()
+    }
+
+    private fun signOut() {
+        Firebase.auth.signOut()
+        findNavController().navigateUp()
+    }
+
+    private fun getUserCartFromDB() {
+        val db = Firebase.firestore
+        val userId = Firebase.auth.uid.toString()
+        val cartRef = db.collection("users").document(userId).collection("carts")
+        cartRef.whereEqualTo("isItFulfilled", false).get()
+            .addOnSuccessListener { cartsSnapshot ->
+                if (cartsSnapshot.size() > 0) {
+                    val carts = cartsSnapshot.toObjects<Cart>()
+                    val bundle = Bundle()
+                    bundle.putParcelable("cart", carts[0])
+                    findNavController().navigate(
+                        R.id.action_homeFragment_to_cartFragment,
+                        bundle
+                    )
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        "there is no saved carts !",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+    }
+
+    private fun displayUsername() {
+        db = Firebase.firestore
+        val userId = Firebase.auth.currentUser?.uid
+        db.collection("users").document(userId.toString()).get().addOnCompleteListener {
+            if (it.isSuccessful) {
+                val user = it.result?.toObject<User>()
+                bind.usernameText.text = user?.firstName
+
+            } else {
+                Log.i("FIRE", "username failed due to ${it.exception}")
+            }
+
+        }
+    }
+
+    private val restaurants = mutableListOf<Restaurant>()
+    private fun createRestaurantsList() {
+        val restaurantsRecyclerView = bind.restaurantsRecyclerView
         restaurantsRecyclerView.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        context?.let {
-            val adapter = RestaurantsRecyclerAdapter(it, restaurants)
-            restaurantsRecyclerView.adapter = adapter
+        val adapter =
+            RestaurantsRecyclerAdapter(requireContext(), restaurants, ::restaurantOnItemClick)
+        restaurantsRecyclerView.adapter = adapter
+        db.collection("restaurants").get().addOnSuccessListener {
+            restaurants.clear()
+            restaurants.addAll(it.toObjects())
+
+            adapter.notifyDataSetChanged()
         }
+
+
     }
+
+    private val meals = mutableListOf<Meal>()
 
     private fun createPopularList() {
-        val titles = resources.getStringArray(R.array.popular_titles)
-        val descriptions = resources.getStringArray(R.array.popular_descriptions)
-        val populars = mutableListOf<PopularMeal>()
-        val drawableIds = listOf<Int>(
-            R.drawable.stake,
-            R.drawable.mashed_potato_casserole,
-            R.drawable.grilled_potato_wedge_fries
-        )
-        titles.forEachIndexed { index, text ->
-            val random = Random(index)
-            val drawable = ResourcesCompat.getDrawable(resources, drawableIds[index], null)
-            drawable?.let {
-                populars.add(
-                    PopularMeal(
-                        text,
-                        descriptions[index],
-                        random.nextInt(10, 30).toString() + " $",
-                        random.nextInt(3, 5).toString(),
-                        it
-                    )
-                )
-            }
-        }
-        val recyclerView: RecyclerView = binding.popularRecyclerView
+
+
+        val recyclerView: RecyclerView = bind.popularRecyclerView
         recyclerView.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        context?.let {
-            val adapter = PopularRecyclerAdapter(it, populars)
-            recyclerView.adapter = adapter
+        val adapter = PopularRecyclerAdapter(requireContext(), meals, ::popularOnItemClick)
+        recyclerView.adapter = adapter
+        db.collection("meals").get().addOnSuccessListener {
+            meals.clear()
+            meals.addAll(it.toObjects())
+            endLoadingAnimation()
+            adapter.notifyDataSetChanged()
+
+
         }
+
+
     }
 
+    val foodCategories = listOf("Burger", "Sushi", "Pizza", "Chicken", "Pasta")
     private fun createCategoryList() {
-        val foodCategories = listOf("Burger", "Sushi", "Pizza", "Chicken", "Pasta")
+
         val colors = listOf(
             R.color.card1_color,
             R.color.card2_color,
@@ -133,12 +187,34 @@ class HomeFragment : Fragment() {
             drawable?.let { foodList.add(Category(s, color, it)) }
         }
 
-        val categoryRecyclerView = binding.categoryRecyclerView as RecyclerView
+        val categoryRecyclerView = bind.categoryRecyclerView
         categoryRecyclerView.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        context?.let {
-            val adapter = CategoryRecyclerAdapter(it, foodList)
-            categoryRecyclerView.adapter = adapter
-        }
+        val adapter = CategoryRecyclerAdapter(requireContext(), foodList, ::categoryOItemClick)
+        categoryRecyclerView.adapter = adapter
     }
+
+
+    private fun popularOnItemClick(position: Int) {
+        val bundle = Bundle()
+        bundle.putParcelable("meal", meals[position])
+        findNavController().navigate(R.id.action_home_to_order, bundle)
+    }
+
+
+    private fun restaurantOnItemClick(position: Int) {
+        val bundle = Bundle()
+        bundle.putString("field", "restaurantId")
+        bundle.putString("value", restaurants[position].restaurantId)
+        findNavController().navigate(R.id.action_home_to_food, bundle)
+    }
+
+    private fun categoryOItemClick(position: Int) {
+        val bundle = Bundle()
+        bundle.putString("field", "type")
+        bundle.putString("value", foodCategories[position])
+        findNavController().navigate(R.id.action_home_to_food, bundle)
+    }
+
+
 }

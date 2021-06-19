@@ -13,27 +13,26 @@ import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.BounceInterpolator
 import android.widget.ImageView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.core.animation.addListener
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.ertreby.foodbox.R
 import com.ertreby.foodbox.databinding.FragmentSplashBinding
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 
 class SplashFragment : Fragment() {
     lateinit var binding: FragmentSplashBinding
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        (activity as AppCompatActivity).supportActionBar?.hide()
-    }
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentSplashBinding.inflate(layoutInflater, container, false)
         addMotionLayoutListener()
         return binding.root
@@ -41,24 +40,31 @@ class SplashFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        // view?.let { animateImageView(it) }
+        animateImageView()
     }
 
     private fun addMotionLayoutListener() {
+        val currentUser = Firebase.auth.currentUser
+
+
         (binding.constrainLayout).addTransitionListener(object :
             MotionLayout.TransitionListener {
             override fun onTransitionStarted(p0: MotionLayout?, p1: Int, p2: Int) {
-                (activity as AppCompatActivity).supportActionBar?.show()
-                (activity as AppCompatActivity).supportActionBar?.elevation = 0f
+
             }
 
             override fun onTransitionChange(p0: MotionLayout?, p1: Int, p2: Int, p3: Float) {
 
                 Log.i("MOTION", "onTransitionChanged called $p3")
                 if (p3 > 0.98) {
-                    //findNavController().navigate(R.id.action_splash_to_home)
-                    findNavController().navigate(R.id.action_splash_to_cartFragment)
 
+
+
+                    if (currentUser != null) {
+                        findNavController().navigate(R.id.splash_to_home)
+                    } else {
+                        findNavController().navigate(R.id.action_splash_to_signIn)
+                    }
                 }
             }
 
@@ -74,7 +80,10 @@ class SplashFragment : Fragment() {
     }
 
 
-    private fun animateImageView(view: View) {
+
+
+
+    private fun animateImageView() {
         val imageView: ImageView = binding.iconCenterImage
 
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {

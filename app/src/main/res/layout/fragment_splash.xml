@@ -49,7 +49,7 @@
         app:layout_constraintTop_toBottomOf="@+id/icon_center_Image" />
 
 
-    <EditText
+    <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/editTextTextPersonName2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -97,6 +97,26 @@
         app:layout_constraintStart_toStartOf="@+id/editTextTextPersonName2"
         app:layout_constraintTop_toTopOf="@+id/editTextTextPersonName2" />
 
+
+    <ImageView
+        android:alpha="0"
+        android:id="@+id/profileButton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_user" />
+
+    <ImageView
+        android:alpha="0"
+        android:id="@+id/cartButton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/profileButton"
+        app:srcCompat="@drawable/ic_cart" />
 
 
 </androidx.constraintlayout.motion.widget.MotionLayout>

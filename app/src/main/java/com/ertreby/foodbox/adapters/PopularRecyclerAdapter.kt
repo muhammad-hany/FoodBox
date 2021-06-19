@@ -6,12 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.ertreby.foodbox.R
-import com.ertreby.foodbox.data.PopularMeal
+import com.ertreby.foodbox.data.Meal
 import com.ertreby.foodbox.databinding.PopularItemListBinding
+import com.squareup.picasso.Picasso
 
-class PopularRecyclerAdapter(val context: Context, val populars:List<PopularMeal>) : RecyclerView.Adapter<PopularRecyclerAdapter.ViewHolder>() {
-
-
+class PopularRecyclerAdapter(val context: Context, private val meals: List<Meal>, private val callback:(Int)->Unit) :
+    RecyclerView.Adapter<PopularRecyclerAdapter.ViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -21,19 +21,27 @@ class PopularRecyclerAdapter(val context: Context, val populars:List<PopularMeal
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.binding.titleText.text = populars[position].title
-        holder.binding.descriptionText.text=populars[position].description
-        holder.binding.backgroundImage.setImageDrawable(populars[position].drawable)
-        holder.binding.rattingText.text = populars[position].ratting
-        holder.binding.priceText.text= populars[position].price.toString()
+        holder.bindViews(meals[position])
+        holder.binding.card.setOnClickListener { callback(position) }
     }
 
     override fun getItemCount(): Int {
-        return populars.size
+        return meals.size
     }
 
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val binding=PopularItemListBinding.bind(itemView)
+        val binding = PopularItemListBinding.bind(itemView)
+
+        fun bindViews(meal: Meal) {
+            binding.titleText.text = meal.name
+            binding.descriptionText.text = meal.description
+            val url = meal.imageUrl
+            Picasso.get().load(url).placeholder(R.drawable.ic_avatar).into(binding.backgroundImage)
+            binding.ratingText.text = meal.rating.toString()
+            binding.priceText.text = meal.price
+        }
+
+
     }
 }

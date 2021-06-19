@@ -11,29 +11,99 @@
         android:label="fragment_splash"
         tools:layout="@layout/fragment_splash">
         <action
-            android:id="@+id/action_splash_to_signUp"
-            app:destination="@id/signUpFragment" />
-        <action
-            android:id="@+id/action_splash_to_home"
+
+            android:id="@+id/splash_to_home"
             app:destination="@id/homeFragment" />
         <action
-            android:id="@+id/action_splash_to_cartFragment"
-            app:destination="@id/cartFragment" />
+            android:id="@+id/action_splash_to_signIn"
+            app:destination="@id/signInFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/verificationFragment"
-        android:name="com.ertreby.foodbox.fragments.EnterPhoneFragment"
-        android:label="VerificationFragment" />
+
     <fragment
         android:id="@+id/signUpFragment"
         android:name="com.ertreby.foodbox.fragments.SignUpFragment"
-        android:label="SignUpFragment" />
+        android:label="SignUpFragment"
+        tools:layout="@layout/fragment_sign_up"
+        >
+        <action
+            android:id="@+id/action_signUpFragment_to_enterPhoneFragment"
+            app:destination="@id/enterPhoneFragment" />
+    </fragment>
     <fragment
+        tools:layout="@layout/fragment_home"
         android:id="@+id/homeFragment"
         android:name="com.ertreby.foodbox.fragments.HomeFragment"
-        android:label="HomeFragment" />
+        android:label="fragment_home">
+        <action
+            android:id="@+id/action_home_to_order"
+            app:destination="@id/orderFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_cartFragment"
+            app:destination="@id/cartFragment" />
+        <action
+            android:id="@+id/action_home_to_food"
+            app:destination="@id/foodFragment" />
+    </fragment>
     <fragment
+        tools:layout="@layout/fragmnet_sign_in"
+        android:id="@+id/signInFragment"
+        android:name="com.ertreby.foodbox.fragments.SignInFragment"
+        android:label="SignInFragment" >
+        <action
+            android:id="@+id/action_signIn_to_signUp"
+            app:destination="@id/signUpFragment" />
+        <action
+            android:id="@+id/action_signIn_to_home"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        tools:layout="@layout/fragment_enterphone"
+        android:id="@+id/enterPhoneFragment"
+        android:name="com.ertreby.foodbox.fragments.EnterPhoneFragment"
+        android:label="EnterPhoneFragment" >
+        <action
+            android:id="@+id/action_enterPhoneFragment_to_verificationReceive"
+            app:destination="@id/verificationReceive" />
+    </fragment>
+    <fragment
+        tools:layout="@layout/fragment_verification_receive"
+        android:id="@+id/verificationReceive"
+        android:name="com.ertreby.foodbox.fragments.VerificationReceive"
+        android:label="VerificationReceive" >
+        <action
+            android:id="@+id/action_verificationReceive_to_verifiedFragment"
+            app:destination="@id/verifiedFragment" />
+    </fragment>
+    <fragment
+        tools:layout="@layout/fragment_verfied"
+        android:id="@+id/verifiedFragment"
+        android:name="com.ertreby.foodbox.fragments.VerifiedFragment"
+        android:label="VerifiedFragment" >
+        <action
+            android:id="@+id/action_verifiedFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        tools:layout="@layout/fragment_order"
+        android:id="@+id/orderFragment"
+        android:name="com.ertreby.foodbox.fragments.OrderFragment"
+        android:label="fragment_order">
+        <action
+            app:popUpTo="@+id/homeFragment"
+            android:id="@+id/action_orderFragment_to_cartFragment"
+            app:destination="@id/cartFragment" />
+    </fragment>
+    <fragment
+        tools:layout="@layout/fragment_cart"
         android:id="@+id/cartFragment"
         android:name="com.ertreby.foodbox.fragments.CartFragment"
         android:label="CartFragment" />
+    <fragment
+        android:id="@+id/foodFragment"
+        android:name="com.ertreby.foodbox.fragments.FoodFragment"
+        android:label="FoodFragment" >
+        <action
+            android:id="@+id/action_foodFragment_to_orderFragment"
+            app:destination="@id/orderFragment" />
+    </fragment>
 </navigation>
