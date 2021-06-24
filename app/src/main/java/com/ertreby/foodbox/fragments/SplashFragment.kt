@@ -44,6 +44,8 @@ class SplashFragment : Fragment() {
     }
 
     private fun addMotionLayoutListener() {
+
+
         val currentUser = Firebase.auth.currentUser
 
 

@@ -9,14 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.ertreby.foodbox.R
 import com.ertreby.foodbox.databinding.FragmentVerificationReceiveBinding
-import com.google.firebase.FirebaseException
-import com.google.firebase.auth.PhoneAuthCredential
-import com.google.firebase.auth.PhoneAuthOptions
-import com.google.firebase.auth.PhoneAuthProvider
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
-import java.util.concurrent.TimeUnit
+import com.ertreby.foodbox.repositories.FirebaseService
 
 class VerificationReceive : Fragment() {
 
@@ -50,57 +43,29 @@ class VerificationReceive : Fragment() {
 
         bind.resendCodeButton.setOnClickListener {
             phoneVerification()
-            Toast.makeText(requireContext(),"Code sent !",Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Code sent !", Toast.LENGTH_SHORT).show()
         }
 
     }
 
 
     private fun phoneVerification() {
-        val options = PhoneAuthOptions.newBuilder(Firebase.auth).apply {
-
-            setPhoneNumber(fullNumber)
-            setTimeout(60L, TimeUnit.SECONDS)
-            setActivity(requireActivity())
-            setCallbacks(calback)
-
-        }.build()
-
-        PhoneAuthProvider.verifyPhoneNumber(options)
-
+        FirebaseService.verifyPhoneNumber(fullNumber,requireActivity(),::onVerificationSuccess,::onVerificationFailed)
 
     }
 
-    private val calback = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-        override fun onVerificationCompleted(p0: PhoneAuthCredential) {
-            bind.otpView.setText(p0.smsCode)
-            signInWithPhoneAuthCredential(p0)
 
-        }
-
-        override fun onVerificationFailed(p0: FirebaseException) {
-
-        }
-
+    private fun onVerificationSuccess() {
+        findNavController().navigate(R.id.action_verificationReceive_to_verifiedFragment)
     }
-    val db = Firebase.firestore
-
-    fun signInWithPhoneAuthCredential(credential: PhoneAuthCredential) {
-
-        Firebase.auth.currentUser!!.linkWithCredential(credential)
-            .addOnCompleteListener { result ->
-                if (result.isSuccessful) {
-                    findNavController().navigate(R.id.action_verificationReceive_to_verifiedFragment)
-                } else {
-                    Toast.makeText(
-                        requireContext(),
-                        "${result.exception}",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
 
 
-            }
+    private fun onVerificationFailed(exception: Exception?) {
+        Toast.makeText(
+            requireContext(),
+            "$exception",
+            Toast.LENGTH_LONG
+        ).show()
     }
 
 }

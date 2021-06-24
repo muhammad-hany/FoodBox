@@ -1,14 +1,13 @@
 package com.ertreby.foodbox.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,19 +15,19 @@ import com.ertreby.foodbox.R
 import com.ertreby.foodbox.adapters.CategoryRecyclerAdapter
 import com.ertreby.foodbox.adapters.PopularRecyclerAdapter
 import com.ertreby.foodbox.adapters.RestaurantsRecyclerAdapter
-import com.ertreby.foodbox.data.*
+import com.ertreby.foodbox.data.Cart
+import com.ertreby.foodbox.data.Category
+import com.ertreby.foodbox.data.Meal
+import com.ertreby.foodbox.data.Restaurant
 import com.ertreby.foodbox.databinding.FragmentHomeBinding
+import com.ertreby.foodbox.viewmodels.HomeViewModel
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.firestore.ktx.toObject
-import com.google.firebase.firestore.ktx.toObjects
 import com.google.firebase.ktx.Firebase
 
 class HomeFragment : Fragment() {
 
     lateinit var bind: FragmentHomeBinding
-    lateinit var db: FirebaseFirestore
+    val viewModel: HomeViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,13 +46,23 @@ class HomeFragment : Fragment() {
         startLoadingAnimation()
 
         displayUsername()
+
+
+
+
+
         bind.cartButton.setOnClickListener {
-            getUserCartFromDB()
+            val bundle = Bundle()
+            val cart: Cart? = viewModel.getActiveCart()
+            bundle.putParcelable("cart", cart)
+            findNavController().navigate(
+                R.id.action_homeFragment_to_cartFragment, bundle
+            )
 
         }
 
         bind.profileButton.setOnClickListener {
-            signOut()
+             signOut()
 
         }
 
@@ -66,14 +75,14 @@ class HomeFragment : Fragment() {
 
 
     private fun startLoadingAnimation() {
-        bind.scroll.visibility=View.INVISIBLE
+        bind.scroll.visibility = View.INVISIBLE
         val loadingAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.blink)
         bind.loadingImage.startAnimation(loadingAnimation)
     }
 
 
     private fun endLoadingAnimation() {
-        bind.scroll.visibility=View.VISIBLE
+        bind.scroll.visibility = View.VISIBLE
         bind.loadingImage.visibility = View.GONE
         bind.loadingImage.clearAnimation()
     }
@@ -83,43 +92,12 @@ class HomeFragment : Fragment() {
         findNavController().navigateUp()
     }
 
-    private fun getUserCartFromDB() {
-        val db = Firebase.firestore
-        val userId = Firebase.auth.uid.toString()
-        val cartRef = db.collection("users").document(userId).collection("carts")
-        cartRef.whereEqualTo("isItFulfilled", false).get()
-            .addOnSuccessListener { cartsSnapshot ->
-                if (cartsSnapshot.size() > 0) {
-                    val carts = cartsSnapshot.toObjects<Cart>()
-                    val bundle = Bundle()
-                    bundle.putParcelable("cart", carts[0])
-                    findNavController().navigate(
-                        R.id.action_homeFragment_to_cartFragment,
-                        bundle
-                    )
-                } else {
-                    Toast.makeText(
-                        requireContext(),
-                        "there is no saved carts !",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-            }
-    }
 
     private fun displayUsername() {
-        db = Firebase.firestore
-        val userId = Firebase.auth.currentUser?.uid
-        db.collection("users").document(userId.toString()).get().addOnCompleteListener {
-            if (it.isSuccessful) {
-                val user = it.result?.toObject<User>()
-                bind.usernameText.text = user?.firstName
-
-            } else {
-                Log.i("FIRE", "username failed due to ${it.exception}")
-            }
-
+        viewModel.user.observe(viewLifecycleOwner) {
+            bind.usernameText.text = it.firstName
         }
+
     }
 
     private val restaurants = mutableListOf<Restaurant>()
@@ -130,10 +108,9 @@ class HomeFragment : Fragment() {
         val adapter =
             RestaurantsRecyclerAdapter(requireContext(), restaurants, ::restaurantOnItemClick)
         restaurantsRecyclerView.adapter = adapter
-        db.collection("restaurants").get().addOnSuccessListener {
+        viewModel.restaurants.observe(viewLifecycleOwner) {
             restaurants.clear()
-            restaurants.addAll(it.toObjects())
-
+            restaurants.addAll(it)
             adapter.notifyDataSetChanged()
         }
 
@@ -150,13 +127,11 @@ class HomeFragment : Fragment() {
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         val adapter = PopularRecyclerAdapter(requireContext(), meals, ::popularOnItemClick)
         recyclerView.adapter = adapter
-        db.collection("meals").get().addOnSuccessListener {
+        viewModel.meals.observe(viewLifecycleOwner) {
             meals.clear()
-            meals.addAll(it.toObjects())
+            meals.addAll(it)
             endLoadingAnimation()
             adapter.notifyDataSetChanged()
-
-
         }
 
 
@@ -190,7 +165,7 @@ class HomeFragment : Fragment() {
         val categoryRecyclerView = bind.categoryRecyclerView
         categoryRecyclerView.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        val adapter = CategoryRecyclerAdapter(requireContext(), foodList, ::categoryOItemClick)
+        val adapter = CategoryRecyclerAdapter(requireContext(), foodList, ::categoryOnItemClick)
         categoryRecyclerView.adapter = adapter
     }
 
@@ -209,7 +184,7 @@ class HomeFragment : Fragment() {
         findNavController().navigate(R.id.action_home_to_food, bundle)
     }
 
-    private fun categoryOItemClick(position: Int) {
+    private fun categoryOnItemClick(position: Int) {
         val bundle = Bundle()
         bundle.putString("field", "type")
         bundle.putString("value", foodCategories[position])

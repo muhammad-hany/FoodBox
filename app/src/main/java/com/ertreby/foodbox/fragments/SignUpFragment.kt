@@ -19,15 +19,11 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.ertreby.foodbox.R
-import com.ertreby.foodbox.data.User
 import com.ertreby.foodbox.databinding.FragmentSignUpBinding
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
+import com.ertreby.foodbox.repositories.FirebaseService
 
 class SignUpFragment : Fragment() {
     lateinit var bind: FragmentSignUpBinding
-    val db = Firebase.firestore
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -78,33 +74,34 @@ class SignUpFragment : Fragment() {
 
     private fun signup() {
         if (!checkAllFieldFilled(editTexts) || !checkTermsAndConditions()) return
-        val auth = Firebase.auth
-        auth.createUserWithEmailAndPassword(
-            bind.editTextEmail.text.toString(),
-            bind.editTextPassword.text.toString()
-        ).apply {
-            addOnCompleteListener {
-                if (it.isSuccessful) {
-                    //make something with userId
-                    val id = it.result?.user?.uid
-                    val user = User(
-                        bind.editTextFirstName.text.toString(),
-                        bind.editTexLastName.text.toString(),
-                        id
-                    )
-                    db.collection("users").document(id.toString()).set(user).addOnSuccessListener {
-                        findNavController().navigate(R.id.action_signUpFragment_to_enterPhoneFragment)
-                    }
 
-                } else {
-                    Toast.makeText(
-                        context,
-                        "Signup Failed due to ${it.exception}",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-            }
-        }
+        val email = bind.editTextEmail.text.toString()
+        val password = bind.editTextPassword.text.toString()
+        val firstName = bind.editTextFirstName.text.toString()
+        val lastName = bind.editTexLastName.text.toString()
+
+        FirebaseService.signUp(
+            email,
+            password,
+            firstName,
+            lastName,
+            ::onAccountCreationSuccess,
+            ::onAccountCreationFail
+        )
+
+
+    }
+
+    private fun onAccountCreationSuccess() {
+        findNavController().navigate(R.id.action_signUpFragment_to_enterPhoneFragment)
+    }
+
+    private fun onAccountCreationFail(e: Exception) {
+        Toast.makeText(
+            context,
+            "Signup Failed due to $e",
+            Toast.LENGTH_LONG
+        ).show()
     }
 
     private fun checkTermsAndConditions(): Boolean {
@@ -173,9 +170,6 @@ class SignUpFragment : Fragment() {
         bind.termsCheck.text = spannable
         bind.termsCheck.movementMethod = LinkMovementMethod.getInstance()
     }
-
-
-
 
 
 }
