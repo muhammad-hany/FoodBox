@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
 
-    <com.ertreby.foodbox.RoundedRect
+    <com.ertreby.foodbox.ui.RoundedRect
         android:id="@+id/roundedRect"
         android:layout_width="match_parent"
         android:layout_height="130dp"

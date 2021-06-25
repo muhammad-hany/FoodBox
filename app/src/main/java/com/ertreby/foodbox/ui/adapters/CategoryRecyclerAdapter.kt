@@ -1,4 +1,4 @@
-package com.ertreby.foodbox.adapters
+package com.ertreby.foodbox.ui.adapters
 
 import android.content.Context
 import android.view.LayoutInflater

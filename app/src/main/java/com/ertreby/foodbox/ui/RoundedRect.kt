@@ -1,4 +1,4 @@
-package com.ertreby.foodbox
+package com.ertreby.foodbox.ui
 
 import android.content.Context
 import android.graphics.Canvas
@@ -7,6 +7,7 @@ import android.graphics.Path
 import android.util.AttributeSet
 import android.view.View
 import androidx.core.content.res.ResourcesCompat
+import com.ertreby.foodbox.R
 
 class RoundedRect @JvmOverloads constructor(
     context: Context,

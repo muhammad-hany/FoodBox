@@ -1,4 +1,4 @@
-package com.ertreby.foodbox.fragments
+package com.ertreby.foodbox.ui.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,9 +12,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ertreby.foodbox.R
-import com.ertreby.foodbox.adapters.CategoryRecyclerAdapter
-import com.ertreby.foodbox.adapters.PopularRecyclerAdapter
-import com.ertreby.foodbox.adapters.RestaurantsRecyclerAdapter
+import com.ertreby.foodbox.ui.adapters.CategoryRecyclerAdapter
+import com.ertreby.foodbox.ui.adapters.PopularRecyclerAdapter
+import com.ertreby.foodbox.ui.adapters.RestaurantsRecyclerAdapter
 import com.ertreby.foodbox.data.Cart
 import com.ertreby.foodbox.data.Category
 import com.ertreby.foodbox.data.Meal

@@ -1,4 +1,4 @@
-package com.ertreby.foodbox.fragments
+package com.ertreby.foodbox.ui.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.ertreby.foodbox.R
 import com.ertreby.foodbox.databinding.FragmentVerificationReceiveBinding
-import com.ertreby.foodbox.repositories.FirebaseService
+import com.ertreby.foodbox.data.FirebaseService
 
 class VerificationReceive : Fragment() {
 

@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:layoutDescription="@xml/cart_item_list_scene">
+
+
+    <Space
+        android:id="@+id/space"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        app:layout_constraintBottom_toBottomOf="@id/cardView3"
+        app:layout_constraintEnd_toEndOf="@id/cardView3"
+        app:layout_constraintStart_toStartOf="@+id/cardView3"
+        app:layout_constraintTop_toTopOf="@id/cardView3" />
+
+    <ImageView
+        android:clickable="true"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:id="@+id/rightImage"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:adjustViewBounds="true"
+        android:background="@drawable/delete_background"
+        android:padding="35dp"
+        android:paddingEnd="25dp"
+        android:paddingStart="45dp"
+        app:layout_constraintBottom_toBottomOf="@+id/cardView3"
+        app:layout_constraintEnd_toEndOf="@+id/cardView3"
+        app:layout_constraintTop_toTopOf="@+id/cardView3"
+        app:srcCompat="@drawable/ic_delete" />
+
+    <ImageView
+        android:id="@+id/leftImage"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:adjustViewBounds="true"
+        android:background="@drawable/delete_background"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:padding="35dp"
+        android:paddingStart="25dp"
+        android:paddingEnd="45dp"
+        app:layout_constraintBottom_toBottomOf="@+id/cardView3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/cardView3"
+        app:srcCompat="@drawable/ic_delete" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        app:cardCornerRadius="15dp"
+        app:cardElevation="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageButton
+                android:id="@+id/plus_btn"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="24dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_plus"
+                app:layout_constraintBottom_toBottomOf="@+id/mealQuantity"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/mealQuantity"
+                app:layout_constraintVertical_bias="0.5" />
+
+            <ImageButton
+
+                android:id="@+id/minus_btn"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="?attr/selectableItemBackground"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_minus"
+                app:layout_constraintBottom_toBottomOf="@+id/mealQuantity"
+                app:layout_constraintEnd_toStartOf="@+id/mealQuantity"
+                app:layout_constraintTop_toTopOf="@+id/mealQuantity"
+                app:layout_constraintVertical_bias="0.5" />
+
+            <TextView
+                android:id="@+id/mealQuantity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:gravity="center|center_horizontal"
+                android:maxLength="1"
+                android:minEms="1"
+                android:text="9"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/plus_btn"
+                app:layout_constraintTop_toBottomOf="@+id/meal_price" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardView2"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                app:cardCornerRadius="15dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/cart_image"
+                    android:layout_width="120dp"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    app:srcCompat="@drawable/ic_avatar" />
+            </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:id="@+id/meal_name"
+                style="@style/TextAppearance.Subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:text="sdsd kk"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/cardView2"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/meal_price"
+                style="@style/TextAppearance.Body"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="sdsds kk"
+                android:textColor="@color/color_primary"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/cardView2"
+                app:layout_constraintTop_toBottomOf="@+id/meal_name"
+                app:layout_constraintVertical_bias="0.0" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.motion.widget.MotionLayout>

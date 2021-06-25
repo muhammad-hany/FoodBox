@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/splash"
-        android:name="com.ertreby.foodbox.fragments.SplashFragment"
+        android:name="com.ertreby.foodbox.ui.fragments.SplashFragment"
         android:label="fragment_splash"
         tools:layout="@layout/fragment_splash">
         <action
@@ -21,7 +21,7 @@
 
     <fragment
         android:id="@+id/signUpFragment"
-        android:name="com.ertreby.foodbox.fragments.SignUpFragment"
+        android:name="com.ertreby.foodbox.ui.fragments.SignUpFragment"
         android:label="SignUpFragment"
         tools:layout="@layout/fragment_sign_up"
         >
@@ -32,7 +32,7 @@
     <fragment
         tools:layout="@layout/fragment_home"
         android:id="@+id/homeFragment"
-        android:name="com.ertreby.foodbox.fragments.HomeFragment"
+        android:name="com.ertreby.foodbox.ui.fragments.HomeFragment"
         android:label="fragment_home">
         <action
             android:id="@+id/action_home_to_order"
@@ -47,7 +47,7 @@
     <fragment
         tools:layout="@layout/fragmnet_sign_in"
         android:id="@+id/signInFragment"
-        android:name="com.ertreby.foodbox.fragments.SignInFragment"
+        android:name="com.ertreby.foodbox.ui.fragments.SignInFragment"
         android:label="SignInFragment" >
         <action
             android:id="@+id/action_signIn_to_signUp"
@@ -59,7 +59,7 @@
     <fragment
         tools:layout="@layout/fragment_enterphone"
         android:id="@+id/enterPhoneFragment"
-        android:name="com.ertreby.foodbox.fragments.EnterPhoneFragment"
+        android:name="com.ertreby.foodbox.ui.fragments.EnterPhoneFragment"
         android:label="EnterPhoneFragment" >
         <action
             android:id="@+id/action_enterPhoneFragment_to_verificationReceive"
@@ -68,7 +68,7 @@
     <fragment
         tools:layout="@layout/fragment_verification_receive"
         android:id="@+id/verificationReceive"
-        android:name="com.ertreby.foodbox.fragments.VerificationReceive"
+        android:name="com.ertreby.foodbox.ui.fragments.VerificationReceive"
         android:label="VerificationReceive" >
         <action
             android:id="@+id/action_verificationReceive_to_verifiedFragment"
@@ -77,7 +77,7 @@
     <fragment
         tools:layout="@layout/fragment_verfied"
         android:id="@+id/verifiedFragment"
-        android:name="com.ertreby.foodbox.fragments.VerifiedFragment"
+        android:name="com.ertreby.foodbox.ui.fragments.VerifiedFragment"
         android:label="VerifiedFragment" >
         <action
             android:id="@+id/action_verifiedFragment_to_homeFragment"
@@ -86,7 +86,7 @@
     <fragment
         tools:layout="@layout/fragment_order"
         android:id="@+id/orderFragment"
-        android:name="com.ertreby.foodbox.fragments.OrderFragment"
+        android:name="com.ertreby.foodbox.ui.fragments.OrderFragment"
         android:label="fragment_order">
         <action
             app:popUpTo="@+id/homeFragment"
@@ -96,11 +96,11 @@
     <fragment
         tools:layout="@layout/fragment_cart"
         android:id="@+id/cartFragment"
-        android:name="com.ertreby.foodbox.fragments.CartFragment"
+        android:name="com.ertreby.foodbox.ui.fragments.CartFragment"
         android:label="CartFragment" />
     <fragment
         android:id="@+id/foodFragment"
-        android:name="com.ertreby.foodbox.fragments.FoodFragment"
+        android:name="com.ertreby.foodbox.ui.fragments.FoodFragment"
         android:label="FoodFragment" >
         <action
             android:id="@+id/action_foodFragment_to_orderFragment"

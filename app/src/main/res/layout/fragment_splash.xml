@@ -7,10 +7,10 @@
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
     app:layoutDescription="@xml/fragment_welcome_scene"
-    tools:context=".MainActivity">
+    tools:context=".ui.MainActivity">
 
 
-    <com.ertreby.foodbox.RoundedRect
+    <com.ertreby.foodbox.ui.RoundedRect
         android:id="@+id/backgroundImage"
         android:layout_width="0dp"
         android:layout_height="0dp"

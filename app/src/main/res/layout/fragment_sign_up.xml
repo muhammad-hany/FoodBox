@@ -145,7 +145,7 @@
         android:textSize="17sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password_layout" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextMultiLine" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/create_account_button"
@@ -177,4 +177,21 @@
         app:layout_constraintTop_toTopOf="@+id/mealName"
         app:srcCompat="@drawable/ic_back"
         app:tint="@color/text_color_light" />
+
+    <EditText
+        android:drawablePadding="10dp"
+        android:padding="15dp"
+        android:drawableStart="@drawable/ic_address"
+        android:hint="Address"
+        android:background="@drawable/edit_text_drawable"
+        android:id="@+id/editTextTextMultiLine"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:gravity="start|top"
+        android:inputType="textMultiLine"
+        app:layout_constraintEnd_toEndOf="@+id/password_layout"
+        app:layout_constraintStart_toStartOf="@+id/password_layout"
+        app:layout_constraintTop_toBottomOf="@+id/password_layout" />
 </androidx.constraintlayout.widget.ConstraintLayout>

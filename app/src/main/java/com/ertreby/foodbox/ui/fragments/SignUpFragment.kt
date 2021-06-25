@@ -1,4 +1,4 @@
-package com.ertreby.foodbox.fragments
+package com.ertreby.foodbox.ui.fragments
 
 import android.graphics.Typeface
 import android.os.Bundle
@@ -20,7 +20,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.ertreby.foodbox.R
 import com.ertreby.foodbox.databinding.FragmentSignUpBinding
-import com.ertreby.foodbox.repositories.FirebaseService
+import com.ertreby.foodbox.data.FirebaseService
 
 class SignUpFragment : Fragment() {
     lateinit var bind: FragmentSignUpBinding

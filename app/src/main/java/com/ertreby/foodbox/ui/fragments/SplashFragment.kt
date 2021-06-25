@@ -1,4 +1,4 @@
-package com.ertreby.foodbox.fragments
+package com.ertreby.foodbox.ui.fragments
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
