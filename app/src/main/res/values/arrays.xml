@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="popular_titles">fr
+        <item>Stake</item>
+        <item>Mashed potato casserole</item>
+        <item>Grilled potato fries</item>
+    </string-array>
+c
+    <string-array name="popular_descriptions">
+        <item>Pan-Fried Garlic Butter Steak with Crispy Potatoes and Asparagus.</item>
+        <item>Cooked in herbed half-and-half and topped with fried sage.</item>
+        <item>Grilled Potato Wedge Fries with Roasted Garlic Aioli.</item>
+    </string-array>
+
+    <string-array name="restaurants_title">
+        <item>Mcdonalds</item>
+        <item>Starbucks</item>
+        <item>Dominos</item>
+    </string-array>
+
+    <string-array name="restaurants_description">
+        <item>American cuisine,Fast food,Burger</item>
+        <item>Coffee,Dessert</item>
+        <item>Fast food,Pizza</item>
+    </string-array>
+</resources>
