@@ -8,9 +8,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.ertreby.foodbox.ui.adapters.CartRecyclerAdapter
 import com.ertreby.foodbox.data.Cart
 import com.ertreby.foodbox.databinding.FragmentCartBinding
+import com.ertreby.foodbox.ui.adapters.CartRecyclerAdapter
 import com.ertreby.foodbox.viewmodels.CartViewModel
 
 
@@ -49,16 +49,16 @@ class CartFragment : Fragment() {
 
     }
 
-    fun onCartFulfilled() {
+    private fun onCartFulfilled() {
         findNavController().popBackStack()
     }
 
 
     private fun setUpRecyclerView() {
-        var cart: Cart? = requireArguments().getParcelable("cart")
+       var cart: Cart? = requireArguments().getParcelable("cart")
         cart?.let {
             setVisibilityOfEmptyItemsText(false)
-            val adapter = CartRecyclerAdapter(it)
+            val adapter = CartRecyclerAdapter(it,::onOrdersUpdate)
             binding.recyclerView.layoutManager =
                 LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             binding.recyclerView.adapter = adapter
@@ -73,6 +73,10 @@ class CartFragment : Fragment() {
         }
 
 
+    }
+
+    private fun onOrdersUpdate(cart:Cart ) {
+         viewModel.updateCartOrders(cart)
     }
 
     private fun setVisibilityOfEmptyItemsText(isCartEmpty: Boolean) {

@@ -31,6 +31,10 @@ class CartViewModel  () : ViewModel() {
 
     }
 
+    fun updateCartOrders(cart:Cart){
+        FirebaseService.updateCartOrders(cart)
+    }
+
 
     
 }

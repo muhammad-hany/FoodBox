@@ -8,6 +8,7 @@ data class User(
     val firstName: String? = null,
     val lastName: String? = null,
     val id: String? = null,
+    val address:String?=null,
     val carts: MutableList<Cart>? = null){
 
 
@@ -17,8 +18,10 @@ data class User(
             val firstName=getString("firstName")
             val lastName=getString("lastName")
             val id=getString("id")
+            val address=getString("address")
             val carts=reference.collection("carts").get().await().documents.mapNotNull { it.toObject<Cart>() }
-            return User(firstName,lastName,id,carts.toMutableList())
+            val user=User(firstName,lastName,id,address,carts.toMutableList())
+            return user
         }
     }
 }

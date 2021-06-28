@@ -19,8 +19,8 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.ertreby.foodbox.R
-import com.ertreby.foodbox.databinding.FragmentSignUpBinding
 import com.ertreby.foodbox.data.FirebaseService
+import com.ertreby.foodbox.databinding.FragmentSignUpBinding
 
 class SignUpFragment : Fragment() {
     lateinit var bind: FragmentSignUpBinding
@@ -44,7 +44,8 @@ class SignUpFragment : Fragment() {
             bind.editTextFirstName,
             bind.editTexLastName,
             bind.editTextEmail,
-            bind.editTextPassword
+            bind.editTextPassword,
+            bind.editTextAddress
         )
 
 
@@ -79,12 +80,14 @@ class SignUpFragment : Fragment() {
         val password = bind.editTextPassword.text.toString()
         val firstName = bind.editTextFirstName.text.toString()
         val lastName = bind.editTexLastName.text.toString()
+        val address=bind.editTextAddress.text.toString()
 
         FirebaseService.signUp(
             email,
             password,
             firstName,
             lastName,
+            address,
             ::onAccountCreationSuccess,
             ::onAccountCreationFail
         )

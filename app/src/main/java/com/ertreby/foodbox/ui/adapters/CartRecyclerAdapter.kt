@@ -7,26 +7,23 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ertreby.foodbox.R
 import com.ertreby.foodbox.data.Cart
 import com.ertreby.foodbox.databinding.CartItemListBinding
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.DocumentReference
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
 
-class CartRecyclerAdapter(val cart: Cart) :
+typealias myReflection = (Cart) -> Unit
+
+class CartRecyclerAdapter(val cart: Cart, val onOrderUpdate: myReflection) :
     RecyclerView.Adapter<CartRecyclerAdapter.ViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view =
             LayoutInflater.from(parent.context).inflate(R.layout.cart_item_list, parent, false)
-        return ViewHolder(view, cart,::notifyDataSetChanged)
+        return ViewHolder(view, cart, ::notifyDataSetChanged, onOrderUpdate)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         holder.bindView(position)
-
 
 
     }
@@ -37,16 +34,14 @@ class CartRecyclerAdapter(val cart: Cart) :
     }
 
 
-    class ViewHolder(itemView: View, private val cart: Cart, private val onDataChange:()->Unit) : RecyclerView.ViewHolder(itemView) {
+    class ViewHolder(
+        itemView: View,
+        private val cart: Cart,
+        private val onDataChange: () -> Unit,
+        val onOrderUpdate: myReflection
+    ) : RecyclerView.ViewHolder(itemView) {
         val binding = CartItemListBinding.bind(itemView)
-        private var cartRef:DocumentReference
-        init {
 
-            val db = Firebase.firestore
-            val userId = Firebase.auth.currentUser?.uid.toString()
-            cartRef = db.collection("users").document(userId).collection("carts")
-                .document(cart.timestamp.toString())
-        }
 
         private var mealQuantity: Int = 0
             set(value) {
@@ -66,18 +61,17 @@ class CartRecyclerAdapter(val cart: Cart) :
 
                 order.quantity = --mealQuantity
                 binding.mealQuantity.text = order.quantity?.toString()
-
-                cartRef.update("orders",cart.orders)
+                onOrderUpdate(cart)
             }
             binding.plusBtn.setOnClickListener {
 
                 order.quantity = ++mealQuantity
                 binding.mealQuantity.text = order.quantity?.toString()
-                cartRef.update("orders",cart.orders)
+                onOrderUpdate(cart)
             }
 
             binding.leftImage.setOnClickListener {
-               removeItem(position)
+                removeItem(position)
                 onDataChange()
 
             }
@@ -88,16 +82,13 @@ class CartRecyclerAdapter(val cart: Cart) :
             }
 
 
-
         }
 
-        private fun removeItem(position: Int){
+        private fun removeItem(position: Int) {
+            binding.motion.progress = 0f
             cart.orders?.removeAt(position)
-            if (cart.orders?.isNotEmpty()!!){
-                cartRef.update("orders",cart.orders)
-            }else{
-                cartRef.delete()
-            }
+            onOrderUpdate(cart)
+
 
         }
 

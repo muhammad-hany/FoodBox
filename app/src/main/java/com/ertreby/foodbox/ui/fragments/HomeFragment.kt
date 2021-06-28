@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import android.widget.ArrayAdapter
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -12,14 +13,14 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ertreby.foodbox.R
-import com.ertreby.foodbox.ui.adapters.CategoryRecyclerAdapter
-import com.ertreby.foodbox.ui.adapters.PopularRecyclerAdapter
-import com.ertreby.foodbox.ui.adapters.RestaurantsRecyclerAdapter
 import com.ertreby.foodbox.data.Cart
 import com.ertreby.foodbox.data.Category
 import com.ertreby.foodbox.data.Meal
 import com.ertreby.foodbox.data.Restaurant
 import com.ertreby.foodbox.databinding.FragmentHomeBinding
+import com.ertreby.foodbox.ui.adapters.CategoryRecyclerAdapter
+import com.ertreby.foodbox.ui.adapters.PopularRecyclerAdapter
+import com.ertreby.foodbox.ui.adapters.RestaurantsRecyclerAdapter
 import com.ertreby.foodbox.viewmodels.HomeViewModel
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -44,8 +45,8 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         startLoadingAnimation()
-
         displayUsername()
+
 
 
 
@@ -62,14 +63,43 @@ class HomeFragment : Fragment() {
         }
 
         bind.profileButton.setOnClickListener {
-             signOut()
+            signOut()
 
         }
+
+        /*bind.editTextSearch.addTextChangedListener {
+            viewModel.search(it.toString())
+        }*/
+
 
         createCategoryList()
         createPopularList()
         createRestaurantsList()
 
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.setUpValues()
+    }
+
+    private fun setUpSearchBar() {
+        val searchList = viewModel.getSearchList()
+        val adapter: ArrayAdapter<String> =
+            ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, searchList)
+        bind.editTextSearch.setAdapter(adapter)
+        bind.editTextSearch.setOnItemClickListener { parent, _, position, _ ->
+            val choice:String=parent.getItemAtPosition(position).toString()
+            val index=searchList.indexOf(choice)
+            if (index in 0 until meals.size){
+                //selection is a meal
+                popularOnItemClick(index)
+            }else if (index in meals.size-1 until searchList.size){
+             //selection is restaurant
+                restaurantOnItemClick(index-(meals.size))
+            }
+        }
 
     }
 
@@ -112,6 +142,7 @@ class HomeFragment : Fragment() {
             restaurants.clear()
             restaurants.addAll(it)
             adapter.notifyDataSetChanged()
+            setUpSearchBar()
         }
 
 
@@ -132,12 +163,14 @@ class HomeFragment : Fragment() {
             meals.addAll(it)
             endLoadingAnimation()
             adapter.notifyDataSetChanged()
+            setUpSearchBar()
         }
 
 
     }
 
     val foodCategories = listOf("Burger", "Sushi", "Pizza", "Chicken", "Pasta")
+
     private fun createCategoryList() {
 
         val colors = listOf(
@@ -181,6 +214,7 @@ class HomeFragment : Fragment() {
         val bundle = Bundle()
         bundle.putString("field", "restaurantId")
         bundle.putString("value", restaurants[position].restaurantId)
+        bundle.putString("name",restaurants[position].name)
         findNavController().navigate(R.id.action_home_to_food, bundle)
     }
 

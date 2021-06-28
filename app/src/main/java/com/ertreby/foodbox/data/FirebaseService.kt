@@ -9,6 +9,7 @@ import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.crashlytics.ktx.crashlytics
+import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.firestore.ktx.toObjects
@@ -45,12 +46,13 @@ object FirebaseService {
         password: String,
         firstName: String,
         lastName: String,
+        address: String,
         onSuccess: () -> Unit,
         onFailed: (e: java.lang.Exception) -> Unit
     ) {
         Firebase.auth.createUserWithEmailAndPassword(email, password).addOnSuccessListener {
             val id = it.user?.uid
-            val user = User(firstName, lastName, id)
+            val user = User(firstName, lastName, id, address)
             Firebase.firestore.collection("users").document(id.toString()).set(user)
                 .addOnSuccessListener {
                     onSuccess()
@@ -131,8 +133,9 @@ object FirebaseService {
         }
     }
 
-    suspend fun queryMeals(field: String, value: String) :List<Meal> {
-        return Firebase.firestore.collection("meals").whereEqualTo(field, value).get().await().documents.mapNotNull { it.toObject() }
+    suspend fun queryMeals(field: String, value: String): List<Meal> {
+        return Firebase.firestore.collection("meals").whereEqualTo(field, value).get()
+            .await().documents.mapNotNull { it.toObject() }
     }
 
 
@@ -147,17 +150,33 @@ object FirebaseService {
         }
     }
 
+    private val cartsRef: CollectionReference by lazy {
+        Firebase.firestore.collection("users").document(currentUser?.uid.toString())
+            .collection("carts")
+    }
+
+
+
 
     fun setCartFulfilled(cart: Cart, onSuccessAction: () -> Unit) {
-        val db = Firebase.firestore
-        val cartRef =
-            db.collection("users").document(currentUser?.uid.toString()).collection("carts")
-                .document(cart.timestamp.toString())
-        cartRef.update("isItFulfilled", true).addOnSuccessListener {
+
+        cartsRef.document(cart.timestamp.toString()).update("isItFulfilled", true).addOnSuccessListener {
             onSuccessAction()
         }
 
     }
+
+    fun updateCartOrders(cart: Cart) {
+        val isOrdersEmpty=cart.orders?.isNotEmpty() ?: true
+        if (isOrdersEmpty){
+            cartsRef.document(cart.timestamp.toString()).set(cart)
+        }else{
+            cartsRef.document(cart.timestamp.toString()).delete()
+        }
+
+    }
+
+
 
     fun setOrderToActiveCart(order: Order, onAddingSuccess: (Cart) -> Unit) {
         val db = Firebase.firestore

@@ -9,11 +9,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.ertreby.foodbox.R
-import com.ertreby.foodbox.ui.adapters.OrderPagerAdapter
 import com.ertreby.foodbox.data.Cart
 import com.ertreby.foodbox.data.Meal
 import com.ertreby.foodbox.data.Order
 import com.ertreby.foodbox.databinding.FragmentOrderBinding
+import com.ertreby.foodbox.ui.adapters.OrderPagerAdapter
 import com.ertreby.foodbox.ui.fragments.OrderFragment.CheckBoxListener
 import com.ertreby.foodbox.viewmodels.OrderViewModel
 import com.google.android.material.tabs.TabLayoutMediator
@@ -66,9 +66,21 @@ class OrderFragment : Fragment() {
         definePagerWithTaps()
         setCountText()
 
-        binding.cartButton.setOnClickListener {
-            getUserCartFromDB()
+        viewModel.cart.observe(viewLifecycleOwner){cart->
+
+
+            binding.cartButton.setOnClickListener {
+                // getUserCartFromDB()
+
+                val bundle = Bundle()
+                bundle.putParcelable("cart", cart)
+                findNavController().navigate(
+                    R.id.action_homeFragment_to_cartFragment, bundle
+                )
+            }
         }
+
+
 
         binding.addToCartButton.setOnClickListener {
             meal.extras?.forEachIndexed { index: Int, extra: String ->

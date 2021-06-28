@@ -9,9 +9,9 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.ertreby.foodbox.R
-import com.ertreby.foodbox.ui.adapters.PopularRecyclerAdapter
 import com.ertreby.foodbox.data.Meal
 import com.ertreby.foodbox.databinding.FragmentFoodBinding
+import com.ertreby.foodbox.ui.adapters.PopularRecyclerAdapter
 import com.ertreby.foodbox.viewmodels.FoodViewModel
 
 
@@ -38,6 +38,15 @@ class FoodFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val viewModel:FoodViewModel by viewModels()
+        val field=requireArguments().getString("field")
+        if (field=="restaurantId"){
+            bind.typeText.text=requireArguments().getString("name")
+
+        }else{
+            bind.typeText.text=requireArguments().getString("value")
+        }
+
+
 
         val gridLayoutManager =
             GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false)
@@ -49,6 +58,8 @@ class FoodFragment : Fragment() {
             meals.addAll(it)
             adapter.notifyDataSetChanged()
         }
+
+        bind.backButton.setOnClickListener { findNavController().navigateUp() }
 
 
     }
