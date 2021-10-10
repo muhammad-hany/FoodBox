@@ -18,14 +18,13 @@ import androidx.core.animation.addListener
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.ertreby.foodbox.R
+import com.ertreby.foodbox.data.FirebaseService
 import com.ertreby.foodbox.databinding.FragmentSplashBinding
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 
 
 class SplashFragment : Fragment() {
     lateinit var binding: FragmentSplashBinding
-
+    var isSearchActive=false
 
 
     override fun onCreateView(
@@ -34,8 +33,21 @@ class SplashFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentSplashBinding.inflate(layoutInflater, container, false)
-        addMotionLayoutListener()
+
+        setupLayouts()
+
         return binding.root
+    }
+
+    private fun setupLayouts() {
+        addMotionLayoutListener()
+        binding.editTextTextPersonName2.setOnFocusChangeListener { v, hasFocus ->
+            if (hasFocus){
+                binding.constrainLayout.transitionToEnd()
+                v.clearFocus()
+                isSearchActive=true
+            }
+        }
     }
 
     override fun onResume() {
@@ -46,7 +58,7 @@ class SplashFragment : Fragment() {
     private fun addMotionLayoutListener() {
 
 
-        val currentUser = Firebase.auth.currentUser
+        val currentUser = FirebaseService.currentUser
 
 
         (binding.constrainLayout).addTransitionListener(object :
@@ -63,7 +75,9 @@ class SplashFragment : Fragment() {
 
 
                     if (currentUser != null) {
-                        findNavController().navigate(R.id.splash_to_home)
+                        val bundle=Bundle()
+                        bundle.putBoolean("search_state",isSearchActive)
+                        findNavController().navigate(R.id.splash_to_home,bundle)
                     } else {
                         findNavController().navigate(R.id.action_splash_to_signIn)
                     }

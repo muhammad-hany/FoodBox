@@ -47,6 +47,8 @@ class HomeFragment : Fragment() {
         startLoadingAnimation()
         displayUsername()
 
+        val isSearchActive:Boolean? = arguments?.getBoolean("search_state")
+        isSearchActive.let { if (it == true) bind.editTextSearch.requestFocus() }
 
 
 
@@ -67,9 +69,7 @@ class HomeFragment : Fragment() {
 
         }
 
-        /*bind.editTextSearch.addTextChangedListener {
-            viewModel.search(it.toString())
-        }*/
+
 
 
         createCategoryList()
@@ -125,6 +125,7 @@ class HomeFragment : Fragment() {
 
     private fun displayUsername() {
         viewModel.user.observe(viewLifecycleOwner) {
+
             bind.usernameText.text = it.firstName
         }
 

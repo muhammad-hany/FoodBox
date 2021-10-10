@@ -66,7 +66,7 @@ object FirebaseService {
 
     suspend fun getUserProfile(): User? {
         val db = Firebase.firestore
-        val userId = Firebase.auth.currentUser?.uid
+        val userId = currentUser?.uid
         return try {
             db.collection("users").document(userId.toString()).get().await().toUser()
         } catch (e: Exception) {

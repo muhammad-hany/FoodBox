@@ -48,6 +48,7 @@ class HomeViewModel : ViewModel() {
             _restaurants.value = FirebaseService.getRestaurants()
             _meals.value = FirebaseService.getMeals()
             _user.value = FirebaseService.getUserProfile()
+
         }
     }
 }
