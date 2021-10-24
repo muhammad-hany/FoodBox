@@ -10,7 +10,7 @@ data class Restaurant(
     val rating: Int? = null,
     val logoImage: String? = null,
     val color: String? = null,
-    val menu: List<Meal>? = null,
+    val menu: List<String>? = null,
     val restaurantId:String?= null
 ):Parcelable {
 

@@ -50,27 +50,30 @@ class SignUpFragment : Fragment() {
 
 
         bind.showPasswordImage.setOnClickListener {
-            val isItPasswordType =
-                bind.editTextPassword.transformationMethod is PasswordTransformationMethod
-            bind.editTextPassword.transformationMethod =
-                if (isItPasswordType) HideReturnsTransformationMethod.getInstance() else PasswordTransformationMethod.getInstance()
-            val drawableId =
-                if (isItPasswordType) R.drawable.ic_visibility_off_ else R.drawable.ic_password_visible
-            val drawable = ResourcesCompat.getDrawable(resources, drawableId, null)
-            (it as ImageView).setImageDrawable(drawable)
-            bind.editTextPassword.setSelection(bind.editTextPassword.text.length)
 
-
+            showOrHidePassword(it)
         }
+
         bind.createAccountButton.setOnClickListener {
             signup()
-
         }
 
         bind.backButton.setOnClickListener {
             findNavController().navigateUp()
         }
 
+    }
+
+    private fun showOrHidePassword(view: View) {
+        val isItPasswordType =
+            bind.editTextPassword.transformationMethod is PasswordTransformationMethod
+        bind.editTextPassword.transformationMethod =
+            if (isItPasswordType) HideReturnsTransformationMethod.getInstance() else PasswordTransformationMethod.getInstance()
+        val drawableId =
+            if (isItPasswordType) R.drawable.ic_visibility_off_ else R.drawable.ic_password_visible
+        val drawable = ResourcesCompat.getDrawable(resources, drawableId, null)
+        (view as ImageView).setImageDrawable(drawable)
+        bind.editTextPassword.setSelection(bind.editTextPassword.text.length)
     }
 
     private fun signup() {

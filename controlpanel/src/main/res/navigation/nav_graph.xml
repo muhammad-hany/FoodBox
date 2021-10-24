@@ -3,11 +3,41 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/homeFragment">
+    app:startDestination="@id/signInFragment">
 
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.ertreby.controlpanel.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" />
+    <fragment
+        tools:layout="@layout/fragment_sign_up"
+        android:id="@+id/signUpFragment"
+        android:name="com.ertreby.controlpanel.SignUpFragment"
+        android:label="SignUpFragment" >
+        <action
+            android:id="@+id/action_signUp_to_menuAdd"
+            app:destination="@id/menuAddFragment" />
+    </fragment>
+    <fragment
+        tools:layout="@layout/fragment_menu_add"
+        android:id="@+id/menuAddFragment"
+        android:name="com.ertreby.controlpanel.MenuAddFragment"
+        android:label="MenuAddFragment" >
+        <action
+            android:id="@+id/action_menuAddFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        tools:layout="@layout/fragmnet_sign_in"
+        android:id="@+id/signInFragment"
+        android:name="com.ertreby.controlpanel.SignInFragment"
+        android:label="SignInFragment" >
+        <action
+            android:id="@+id/action_signInFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_signInFragment_to_signUpFragment"
+            app:destination="@id/signUpFragment" />
+    </fragment>
 </navigation>

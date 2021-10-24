@@ -5,6 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
+
     <TextView
 
         android:id="@+id/mealName"
@@ -95,11 +97,12 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/create_account_button"
+        android:id="@+id/signInButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
@@ -150,8 +153,8 @@
         android:layout_marginTop="16dp"
         android:text="Don't have account ?"
         android:textSize="17sp"
-        app:layout_constraintStart_toStartOf="@+id/create_account_button"
-        app:layout_constraintTop_toBottomOf="@+id/create_account_button" />
+        app:layout_constraintStart_toStartOf="@+id/signInButton"
+        app:layout_constraintTop_toBottomOf="@+id/signInButton" />
 
     <Button
         android:id="@+id/signup_button"
@@ -168,4 +171,16 @@
         app:layout_constraintBottom_toBottomOf="@+id/textView5"
         app:layout_constraintStart_toEndOf="@+id/textView5"
         app:layout_constraintTop_toTopOf="@+id/textView5" />
+
+
+    <ImageView
+        android:id="@+id/loadingImage"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/signup_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_footbox_loading" />
 </androidx.constraintlayout.widget.ConstraintLayout>
