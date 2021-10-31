@@ -117,7 +117,7 @@ class SignUpFragment : Fragment() {
 
         FirebaseService.addRestaurant(restaurant,{
             endLoadingAnimation()
-            findNavController().navigate(R.id.action_signUp_to_menuAdd)
+            findNavController().navigate(SignUpFragmentDirections.actionSignUpToMenuAdd("firstMenu"))
         },{
             toastErrorMessage(it)
             endLoadingAnimation()

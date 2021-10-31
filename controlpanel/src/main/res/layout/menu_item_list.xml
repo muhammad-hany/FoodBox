@@ -2,10 +2,10 @@
 <androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/motion"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/motion"
-    app:layoutDescription="@xml/cart_item_list_scene">
+    app:layoutDescription="@xml/menu_item_list_scene">
 
 
     <Space
@@ -18,16 +18,16 @@
         app:layout_constraintTop_toTopOf="@id/cardView3" />
 
     <ImageView
-        android:clickable="true"
-        android:foreground="?android:attr/selectableItemBackground"
         android:id="@+id/rightImage"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:adjustViewBounds="true"
         android:background="@drawable/delete_background"
+        android:clickable="true"
+        android:foreground="?android:attr/selectableItemBackground"
         android:padding="35dp"
-        android:paddingEnd="25dp"
         android:paddingStart="45dp"
+        android:paddingEnd="25dp"
         app:layout_constraintBottom_toBottomOf="@+id/cardView3"
         app:layout_constraintEnd_toEndOf="@+id/cardView3"
         app:layout_constraintTop_toTopOf="@+id/cardView3"
@@ -38,7 +38,7 @@
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:adjustViewBounds="true"
-        android:background="@drawable/delete_background"
+        android:background="@drawable/edit_background"
         android:clickable="true"
         android:focusable="true"
         android:foreground="?android:attr/selectableItemBackground"
@@ -48,7 +48,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/cardView3"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/cardView3"
-        app:srcCompat="@drawable/ic_delete" />
+        app:srcCompat="@drawable/ic_edit" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView3"
@@ -69,59 +69,20 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <ImageButton
-                android:id="@+id/plus_btn"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginEnd="24dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ic_plus"
-                app:layout_constraintBottom_toBottomOf="@+id/mealQuantity"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/mealQuantity"
-                app:layout_constraintVertical_bias="0.5" />
-
-            <ImageButton
-
-                android:id="@+id/minus_btn"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:background="?attr/selectableItemBackground"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ic_minus"
-                app:layout_constraintBottom_toBottomOf="@+id/mealQuantity"
-                app:layout_constraintEnd_toStartOf="@+id/mealQuantity"
-                app:layout_constraintTop_toTopOf="@+id/mealQuantity"
-                app:layout_constraintVertical_bias="0.5" />
-
-            <TextView
-                android:id="@+id/mealQuantity"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
-                android:gravity="center|center_horizontal"
-                android:maxLength="1"
-                android:minEms="1"
-                android:text="9"
-                android:textSize="20sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/plus_btn"
-                app:layout_constraintTop_toBottomOf="@+id/meal_price" />
-
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardView2"
                 android:layout_width="wrap_content"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 app:cardCornerRadius="15dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
-                    android:id="@+id/cart_image"
+                    android:id="@+id/menuImage"
                     android:layout_width="120dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="120dp"
+                    android:padding="10dp"
                     android:scaleType="centerCrop"
                     app:srcCompat="@drawable/ic_avatar" />
             </androidx.cardview.widget.CardView>

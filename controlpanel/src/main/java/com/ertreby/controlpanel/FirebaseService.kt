@@ -4,6 +4,7 @@ import android.net.Uri
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 
@@ -62,7 +63,7 @@ object FirebaseService {
         onSuccess: () -> Unit,
         onFailure: (String) -> Unit
     ) {
-        Firebase.firestore.collection("meals").document(getUniqueId()).set(meal)
+        Firebase.firestore.collection("meals").document(meal.id.toString()).set(meal)
             .addOnSuccessListener {
                 val restaurantRef = Firebase.firestore.collection("restaurants")
                     .document(meal.restaurantId.toString())
@@ -77,6 +78,24 @@ object FirebaseService {
 
 
             }.addOnFailureListener { onFailure(it.message.toString()) }
+    }
+
+     fun updateMeal(
+        meal: Meal,
+        onSuccess: () -> Unit,
+        onFailure: (String) -> Unit
+    ) {
+        Firebase.firestore.collection("meals").document(meal.id.toString()).set(meal)
+            .addOnSuccessListener {
+                onSuccess()
+            }.addOnFailureListener { onFailure(it.message.toString()) }
+
+    }
+
+    fun removeMeal(meal: Meal, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
+        Firebase.firestore.collection("meals").document(meal.id.toString()).delete()
+            .addOnSuccessListener { onSuccess() }
+            .addOnFailureListener { onFailure(it.message.toString()) }
     }
 
 
@@ -103,6 +122,17 @@ object FirebaseService {
             storageRef.downloadUrl.addOnSuccessListener { onSuccess(it.toString()) }
                 .addOnFailureListener { onFailure(it.message.toString()) }
         }.addOnFailureListener { onFailure(it.message.toString()) }
+    }
+
+
+    fun getRestaurantMeals(onSuccess: (List<Meal>) -> Unit) {
+        val id = Firebase.auth.currentUser?.uid.toString()
+        val mealsRef = Firebase.firestore.collection("meals")
+        val query = mealsRef.whereEqualTo("restaurantId", id)
+        query.get().addOnSuccessListener { querySnapShot ->
+            onSuccess(querySnapShot.documents.mapNotNull { it.toObject() })
+        }
+
     }
 
 

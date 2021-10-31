@@ -14,8 +14,6 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.ertreby.controlpanel.databinding.FragmnetSignInBinding
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 
 class SignInFragment : Fragment() {
 
@@ -58,10 +56,11 @@ class SignInFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        if (Firebase.auth.currentUser != null) {
+       /* if (Firebase.auth.currentUser != null) {
             findNavController().navigate(R.id.action_signInFragment_to_homeFragment)
-        }
+        }*/
 
+        findNavController().navigate(R.id.action_signInFragment_to_homeFragment)
     }
 
     private fun signIn() {

@@ -9,30 +9,41 @@
         android:id="@+id/homeFragment"
         android:name="com.ertreby.controlpanel.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
-    <fragment
-        tools:layout="@layout/fragment_sign_up"
-        android:id="@+id/signUpFragment"
-        android:name="com.ertreby.controlpanel.SignUpFragment"
-        android:label="SignUpFragment" >
+        tools:layout="@layout/fragment_home">
         <action
-            android:id="@+id/action_signUp_to_menuAdd"
-            app:destination="@id/menuAddFragment" />
+            android:id="@+id/action_homeFragment_to_menuFragment"
+            app:destination="@id/menuFragment" />
     </fragment>
     <fragment
-        tools:layout="@layout/fragment_menu_add"
+        android:id="@+id/signUpFragment"
+        android:name="com.ertreby.controlpanel.SignUpFragment"
+        android:label="SignUpFragment"
+        tools:layout="@layout/fragment_sign_up">
+        <action
+            android:id="@+id/action_signUp_to_menuAdd"
+            app:destination="@id/menuAddFragment" >
+            <argument
+                android:name="action"
+                android:defaultValue="notFirstMenu"
+                app:argType="string"
+
+                />
+        </action>
+    </fragment>
+    <fragment
         android:id="@+id/menuAddFragment"
         android:name="com.ertreby.controlpanel.MenuAddFragment"
-        android:label="MenuAddFragment" >
+        android:label="MenuAddFragment"
+        tools:layout="@layout/fragment_menu_add">
         <action
             android:id="@+id/action_menuAddFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
     </fragment>
     <fragment
-        tools:layout="@layout/fragmnet_sign_in"
         android:id="@+id/signInFragment"
         android:name="com.ertreby.controlpanel.SignInFragment"
-        android:label="SignInFragment" >
+        android:label="SignInFragment"
+        tools:layout="@layout/fragmnet_sign_in">
         <action
             android:id="@+id/action_signInFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
@@ -40,4 +51,27 @@
             android:id="@+id/action_signInFragment_to_signUpFragment"
             app:destination="@id/signUpFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/menuFragment"
+        android:name="com.ertreby.controlpanel.MenuFragment"
+        android:label="MenuFragment"
+        tools:layout="@layout/fragment_menu">
+        <action
+            android:id="@+id/action_menuFragment_to_menuEditFragment"
+            app:destination="@id/menuEditFragment" />
+        <action
+            android:id="@+id/action_menuFragment_to_menuAddFragment"
+            app:destination="@id/menuAddFragment">
+            <argument
+                android:name="action"
+                android:defaultValue="notFirstMenu"
+                app:argType="string"
+
+                />
+        </action>
+    </fragment>
+    <fragment
+        android:id="@+id/menuEditFragment"
+        android:name="com.ertreby.controlpanel.MenuEditFragment"
+        android:label="MenuEditFragment" />
 </navigation>

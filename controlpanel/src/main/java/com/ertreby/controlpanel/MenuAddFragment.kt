@@ -11,6 +11,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.documentfile.provider.DocumentFile
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.ertreby.controlpanel.databinding.FragmentMenuAddBinding
@@ -21,6 +22,17 @@ class MenuAddFragment : Fragment() {
     private lateinit var bind: FragmentMenuAddBinding
     lateinit var resultLauncher: ActivityResultLauncher<Intent>
     lateinit var mealImageUri: Uri
+    var action="notFirstMenu"
+
+
+
+
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+
+    }
 
 
     override fun onCreateView(
@@ -32,13 +44,23 @@ class MenuAddFragment : Fragment() {
         resultLauncher =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
                 mealImageUri = it.data?.data as Uri
-                bind.imageNameText.text = mealImageUri.lastPathSegment
+                val imageName=DocumentFile.fromSingleUri(requireContext(),mealImageUri)?.name
+                bind.imageNameText.text = imageName
             }
         return bind.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        action=arguments?.getString("action","NotFirstMenu").toString()
+        if (action=="notFirstMenu"){
+            bind.title.text="Add Your Meal"
+
+        }else if (action=="firstMenu"){
+            bind.title.text="Add Your First Meal"
+        }
+
 
         editTexts = listOf(
             bind.mealNameEditText,
@@ -84,10 +106,18 @@ class MenuAddFragment : Fragment() {
 
         FirebaseService.addMeal(meal, {
             endLoadingAnimation()
-            findNavController().navigate(R.id.action_menuAddFragment_to_homeFragment)
+
+            if (action=="notFirstMenu"){
+                findNavController().navigateUp()
+
+            }else if (action=="firstMenu"){
+                findNavController().navigate(R.id.action_menuAddFragment_to_homeFragment)
+            }
+
         }, {
             endLoadingAnimation()
             toastErrorMessage(it)
+
         })
     }
 
