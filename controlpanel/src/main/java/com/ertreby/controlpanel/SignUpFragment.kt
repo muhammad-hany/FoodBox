@@ -25,6 +25,7 @@ import com.google.firebase.ktx.Firebase
 class SignUpFragment : Fragment() {
 
 
+
     private lateinit var bind: FragmentSignUpBinding
     private lateinit var editTexts: List<EditText>
     lateinit var resultLauncher: ActivityResultLauncher<Intent>

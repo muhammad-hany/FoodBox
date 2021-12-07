@@ -4,35 +4,39 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ertreby.foodbox.data.Cart
 import com.ertreby.foodbox.data.FirebaseService
+import com.ertreby.foodbox.data.Order
 import kotlinx.coroutines.launch
 
 class CartViewModel  () : ViewModel() {
 
 
-    private val _cart=MutableLiveData<Cart>()
-    val cart:LiveData<Cart> =_cart
+    private val _orders=MutableLiveData<List<Order>>()
+    val orders:LiveData<List<Order>> =_orders
 
 
     init {
         viewModelScope.launch {
-            _cart.value= FirebaseService.getUserActiveCart()
+            _orders.value= FirebaseService.getUserActiveOrders()
         }
     }
 
 
 
 
-    fun setCartFulfilled(onSuccessAction:()->Unit){
+    fun setOrderFulfilled(onSuccessAction:()->Unit){
         viewModelScope.launch {
-            cart.value?.let { FirebaseService.setCartFulfilled(it,onSuccessAction) }
+            orders.value?.let { FirebaseService.setOrdersFulfilled(it.toMutableList(),onSuccessAction) }
         }
 
     }
 
-    fun updateCartOrders(cart:Cart){
-        FirebaseService.updateCartOrders(cart)
+    fun updateOrder(order: Order){
+        FirebaseService.updateCartOrders(order)
+    }
+
+    fun removeOrder(order:Order){
+        FirebaseService.removeOrder(order)
     }
 
 

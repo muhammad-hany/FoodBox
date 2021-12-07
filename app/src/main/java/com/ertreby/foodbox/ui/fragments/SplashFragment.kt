@@ -18,8 +18,9 @@ import androidx.core.animation.addListener
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.ertreby.foodbox.R
-import com.ertreby.foodbox.data.FirebaseService
 import com.ertreby.foodbox.databinding.FragmentSplashBinding
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 
 class SplashFragment : Fragment() {
@@ -58,7 +59,7 @@ class SplashFragment : Fragment() {
     private fun addMotionLayoutListener() {
 
 
-        val currentUser = FirebaseService.currentUser
+        val currentUser = Firebase.auth.currentUser?.uid
 
 
         (binding.constrainLayout).addTransitionListener(object :
@@ -74,7 +75,7 @@ class SplashFragment : Fragment() {
 
 
 
-                    if (currentUser != null) {
+                    if (Firebase.auth.currentUser?.uid != null) {
                         val bundle=Bundle()
                         bundle.putBoolean("search_state",isSearchActive)
                         findNavController().navigate(R.id.splash_to_home,bundle)

@@ -4,7 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ertreby.foodbox.data.*
+import com.ertreby.foodbox.data.FirebaseService
+import com.ertreby.foodbox.data.Meal
+import com.ertreby.foodbox.data.Restaurant
+import com.ertreby.foodbox.data.User
 import kotlinx.coroutines.launch
 
 class HomeViewModel : ViewModel() {
@@ -25,14 +28,14 @@ class HomeViewModel : ViewModel() {
     }
 
 
-    fun getActiveCart(): Cart? {
+    /*fun getActiveCart(): Cart? {
         var cart: Cart? = null
         user.value?.carts?.forEach { _cart ->
             _cart.isItFulfilled?.let { if (!it) cart = _cart }
 
         }
         return cart
-    }
+    }*/
 
 
 

@@ -13,7 +13,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ertreby.foodbox.R
-import com.ertreby.foodbox.data.Cart
 import com.ertreby.foodbox.data.Category
 import com.ertreby.foodbox.data.Meal
 import com.ertreby.foodbox.data.Restaurant
@@ -55,11 +54,11 @@ class HomeFragment : Fragment() {
 
 
         bind.cartButton.setOnClickListener {
-            val bundle = Bundle()
+            /*val bundle = Bundle()
             val cart: Cart? = viewModel.getActiveCart()
-            bundle.putParcelable("cart", cart)
+            bundle.putParcelable("cart", cart)*/
             findNavController().navigate(
-                R.id.action_homeFragment_to_cartFragment, bundle
+                R.id.action_homeFragment_to_cartFragment
             )
 
         }

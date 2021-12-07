@@ -8,8 +8,8 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.ertreby.foodbox.R
-import com.ertreby.foodbox.databinding.FragmentVerificationReceiveBinding
 import com.ertreby.foodbox.data.FirebaseService
+import com.ertreby.foodbox.databinding.FragmentVerificationReceiveBinding
 
 class VerificationReceive : Fragment() {
 
@@ -37,7 +37,10 @@ class VerificationReceive : Fragment() {
         bind.phoneText.text = fullNumber
         bind.verifyButton.setOnClickListener {
             if (bind.otpView.text.isNullOrBlank()) {
+
                 Toast.makeText(requireContext(), "Enter OTP first !", Toast.LENGTH_SHORT).show()
+            }else{
+                phoneVerification()
             }
         }
 

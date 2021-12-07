@@ -1,4 +1,4 @@
-package com.ertreby.foodbox.data
+package com.ertreby.controlpanel
 
 data class User(
     val firstName: String? = null,

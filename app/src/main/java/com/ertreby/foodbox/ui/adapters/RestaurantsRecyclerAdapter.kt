@@ -11,7 +11,11 @@ import com.ertreby.foodbox.data.Restaurant
 import com.ertreby.foodbox.databinding.RestaurantItemListBinding
 import com.squareup.picasso.Picasso
 
-class RestaurantsRecyclerAdapter(val context: Context, val restaurants: MutableList<Restaurant>,val onItemClick:(Int)->Unit) :
+class RestaurantsRecyclerAdapter(
+    val context: Context,
+    val restaurants: MutableList<Restaurant>,
+    val onItemClick: (Int) -> Unit
+) :
     RecyclerView.Adapter<RestaurantsRecyclerAdapter.ViewHolder>() {
 
 
@@ -39,8 +43,13 @@ class RestaurantsRecyclerAdapter(val context: Context, val restaurants: MutableL
         val binding = RestaurantItemListBinding.bind(itemView)
 
 
-        fun bindView(restaurant: Restaurant){
-            val color = Color.parseColor(restaurant.color)
+        fun bindView(restaurant: Restaurant) {
+            val color :Int = if (restaurant.color !=null){
+                Color.parseColor(restaurant.color)
+            }else{
+                Color.WHITE
+            }
+
             binding.card.setCardBackgroundColor(color)
             binding.restaurantTitle.text = restaurant.name
             binding.restaurantDescription.text = restaurant.description

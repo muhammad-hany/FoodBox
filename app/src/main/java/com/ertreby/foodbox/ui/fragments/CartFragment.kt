@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.ertreby.foodbox.data.Cart
+import com.ertreby.foodbox.data.Order
 import com.ertreby.foodbox.databinding.FragmentCartBinding
 import com.ertreby.foodbox.ui.adapters.CartRecyclerAdapter
 import com.ertreby.foodbox.viewmodels.CartViewModel
@@ -35,15 +35,21 @@ class CartFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
+
+        viewModel.orders.observe(viewLifecycleOwner) { _orders ->
+            setUpRecyclerView(_orders)
+        }
+
         binding.backButton.setOnClickListener { findNavController().navigateUp() }
 
-        setUpRecyclerView()
+
 
 
 
 
         binding.checkoutButton.setOnClickListener {
-            viewModel.setCartFulfilled(::onCartFulfilled)
+            viewModel.setOrderFulfilled(::onCartFulfilled)
         }
 
 
@@ -54,29 +60,32 @@ class CartFragment : Fragment() {
     }
 
 
-    private fun setUpRecyclerView() {
-       var cart: Cart? = requireArguments().getParcelable("cart")
-        cart?.let {
+    private fun setUpRecyclerView(orders:List<Order>) {
+
+
+        if (orders.isNotEmpty()){
+
             setVisibilityOfEmptyItemsText(false)
-            val adapter = CartRecyclerAdapter(it,::onOrdersUpdate)
+            val adapter = CartRecyclerAdapter(orders, ::onOrdersUpdate,::onOrderRemoved)
             binding.recyclerView.layoutManager =
                 LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             binding.recyclerView.adapter = adapter
-            viewModel.cart.observe(viewLifecycleOwner) { _cart ->
-                cart = _cart
-                adapter.notifyDataSetChanged()
-            }
-        }
 
-        if (cart == null) {
+        }else{
             setVisibilityOfEmptyItemsText(true)
         }
 
 
+
+
     }
 
-    private fun onOrdersUpdate(cart:Cart ) {
-         viewModel.updateCartOrders(cart)
+    private fun onOrdersUpdate(order: Order) {
+        viewModel.updateOrder(order)
+    }
+
+    private fun onOrderRemoved(order: Order){
+        viewModel.removeOrder(order)
     }
 
     private fun setVisibilityOfEmptyItemsText(isCartEmpty: Boolean) {

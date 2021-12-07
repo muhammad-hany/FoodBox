@@ -25,6 +25,7 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         bind.menuListButton.setOnClickListener { findNavController().navigate(R.id.action_homeFragment_to_menuFragment) }
+        bind.ordersButton.setOnClickListener { findNavController().navigate(R.id.action_homeFragment_to_ordersFragment) }
     }
 
 }

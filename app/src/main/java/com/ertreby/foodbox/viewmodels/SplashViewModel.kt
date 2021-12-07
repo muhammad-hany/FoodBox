@@ -4,8 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ertreby.foodbox.data.FirebaseService
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
 
 class SplashViewModel : ViewModel() {
@@ -15,7 +16,7 @@ class SplashViewModel : ViewModel() {
 
     init {
         viewModelScope.launch {
-            _firebaseUser.value = FirebaseService.currentUser
+            _firebaseUser.value = Firebase.auth.currentUser
         }
     }
 

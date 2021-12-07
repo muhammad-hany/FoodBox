@@ -1,9 +1,7 @@
 package com.ertreby.foodbox.data
 
 import android.app.Activity
-import com.ertreby.foodbox.data.User.Companion.toUser
 import com.google.firebase.FirebaseException
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
@@ -12,29 +10,28 @@ import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
-import com.google.firebase.firestore.ktx.toObjects
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.tasks.await
+import org.json.JSONObject
 import java.util.concurrent.TimeUnit
 
 object FirebaseService {
 
 
-    val currentUser: FirebaseUser? by lazy {
-        Firebase.auth.currentUser
-    }
-
-
-    suspend fun getUserActiveCart(): Cart? {
+    suspend fun getUserActiveOrders(): List<Order>? {
         val db = Firebase.firestore
-        val cartRef =
-            db.collection("users").document(currentUser?.uid.toString()).collection("carts")
+        val userOrdersRef =
+            db.collection(ORDERS_COLLECTION_KEY)
+        val userId = Firebase.auth.currentUser?.uid
+
         return try {
-            cartRef.whereEqualTo("isItFulfilled", false).get()
-                .await().documents.mapNotNull { it.toObject<Cart>() }[0]
+            userOrdersRef.whereEqualTo("fulfilled", false).whereEqualTo("userId", userId).get()
+                .await().documents.mapNotNull {
+                    it.toObject<Order>()
+                }
         } catch (e: Exception) {
             Firebase.crashlytics.log("Error getting user active cart")
-            Firebase.crashlytics.setCustomKey("user id", currentUser?.uid.toString())
+            Firebase.crashlytics.setCustomKey("user id", userId.toString())
             Firebase.crashlytics.recordException(e)
             null
         }
@@ -52,8 +49,8 @@ object FirebaseService {
     ) {
         Firebase.auth.createUserWithEmailAndPassword(email, password).addOnSuccessListener {
             val id = it.user?.uid
-            val user = User(firstName, lastName, id, address)
-            Firebase.firestore.collection("users").document(id.toString()).set(user)
+            val user = User(firstName, lastName, id, address, listOf())
+            Firebase.firestore.collection(USERS_COLLECTION_KEY).document(id.toString()).set(user)
                 .addOnSuccessListener {
                     onSuccess()
                 }
@@ -66,12 +63,12 @@ object FirebaseService {
 
     suspend fun getUserProfile(): User? {
         val db = Firebase.firestore
-        val userId = currentUser?.uid
+        val userId = Firebase.auth.currentUser?.uid
         return try {
-            db.collection("users").document(userId.toString()).get().await().toUser()
+            db.collection(USERS_COLLECTION_KEY).document(userId.toString()).get().await().toObject<User>()
         } catch (e: Exception) {
             Firebase.crashlytics.log("Error getting user object")
-            Firebase.crashlytics.setCustomKey("user id", currentUser?.uid.toString())
+            Firebase.crashlytics.setCustomKey("user id", userId.toString())
             Firebase.crashlytics.recordException(e)
             null
         }
@@ -123,83 +120,134 @@ object FirebaseService {
     }
 
     suspend fun getMeals(): List<Meal> {
+        val userId = Firebase.auth.currentUser?.uid
         return try {
-            Firebase.firestore.collection("meals").get().await().mapNotNull { it.toObject() }
+            Firebase.firestore.collection(MEALS_COLLECTION_KEY).get().await().mapNotNull { it.toObject() }
         } catch (e: java.lang.Exception) {
             Firebase.crashlytics.log("Error getting meals")
-            Firebase.crashlytics.setCustomKey("user id", currentUser?.uid.toString())
+            Firebase.crashlytics.setCustomKey("user id", userId.toString())
             Firebase.crashlytics.recordException(e)
             emptyList()
         }
     }
 
     suspend fun queryMeals(field: String, value: String): List<Meal> {
-        return Firebase.firestore.collection("meals").whereEqualTo(field, value).get()
+        return Firebase.firestore.collection(MEALS_COLLECTION_KEY).whereEqualTo(field, value).get()
             .await().documents.mapNotNull { it.toObject() }
     }
 
 
     suspend fun getRestaurants(): List<Restaurant> {
+        val userId = Firebase.auth.currentUser?.uid
         return try {
-            Firebase.firestore.collection("restaurants").get().await().mapNotNull { it.toObject() }
+            Firebase.firestore.collection(RESTAURANTS_COLLECTION_KEY).get().await().mapNotNull { it.toObject() }
         } catch (e: java.lang.Exception) {
             Firebase.crashlytics.log("Error getting restaurants")
-            Firebase.crashlytics.setCustomKey("user id", currentUser?.uid.toString())
+            Firebase.crashlytics.setCustomKey("user id", userId.toString())
             Firebase.crashlytics.recordException(e)
             emptyList()
         }
     }
 
-    private val cartsRef: CollectionReference by lazy {
-        Firebase.firestore.collection("users").document(currentUser?.uid.toString())
-            .collection("carts")
+    private val ordersRef: CollectionReference by lazy {
+        Firebase.firestore.collection(ORDERS_COLLECTION_KEY)
     }
 
 
+    fun setOrdersFulfilled(orders: MutableList<Order>, onSuccessAction: () -> Unit) {
+
+        val order = orders.last()
+        ordersRef.document(order.orderId.toString()).update("fulfilled", true)
+            .addOnSuccessListener {
+                if (orders.isNotEmpty()) {
+                    orders.removeLast()
+                    setOrdersFulfilled(orders, onSuccessAction)
+                } else {
+                    onSuccessAction()
+                }
+
+            }
+
+    }
+
+    fun updateCartOrders(order: Order) {
+        ordersRef.document(order.orderId.toString()).set(order)
 
 
-    fun setCartFulfilled(cart: Cart, onSuccessAction: () -> Unit) {
+    }
 
-        cartsRef.document(cart.timestamp.toString()).update("isItFulfilled", true).addOnSuccessListener {
-            onSuccessAction()
+
+    fun removeOrder(order: Order) {
+        ordersRef.document(order.orderId.toString()).delete()
+    }
+
+
+    fun bookOrder(order: Order, onBookingSuccess: (Order) -> Unit) {
+        val orderRef = ordersRef.document(order.orderId.toString())
+
+        orderRef.set(order).addOnSuccessListener {
+            addOrderIdInDb(order, onBookingSuccess)
+
         }
 
-    }
-
-    fun updateCartOrders(cart: Cart) {
-        val isOrdersEmpty=cart.orders?.isNotEmpty() ?: true
-        if (isOrdersEmpty){
-            cartsRef.document(cart.timestamp.toString()).set(cart)
-        }else{
-            cartsRef.document(cart.timestamp.toString()).delete()
-        }
 
     }
 
-
-
-    fun setOrderToActiveCart(order: Order, onAddingSuccess: (Cart) -> Unit) {
+    private fun addOrderIdInDb(order: Order, onBookingSuccess: (Order) -> Unit) {
         val db = Firebase.firestore
         val userId = Firebase.auth.currentUser?.uid
-        val cartRef = db.collection("users").document(userId.toString()).collection("carts")
+        val data = hashMapOf("fulfilled" to false, "orderId" to order.orderId)
+        val restaurantId = order.restaurantId
+        if (userId != null && restaurantId != null) {
+            db.collection("users").document(userId).collection("ordersIds")
+                .document(order.orderId.toString())
+                .set(data).addOnSuccessListener {
+                    db.collection(RESTAURANTS_COLLECTION_KEY).document(restaurantId).collection("ordersIds")
+                        .document(order.orderId.toString()).set(data).addOnSuccessListener {
 
-        cartRef.whereEqualTo("isItFulfilled", false).get().addOnSuccessListener { snapshot ->
-            if (snapshot.size() > 0) {
-                val carts = snapshot.toObjects<Cart>()
-                carts[0].orders?.add(order)
-                val cartDocumentName = carts[0].timestamp.toString()
-                cartRef.document(cartDocumentName).update("orders", carts[0].orders)
-                    .addOnSuccessListener {
-                        onAddingSuccess(carts[0])
-                    }
-            } else {
-                val cart = Cart(mutableListOf(order), false, order.timestamp)
-                cartRef.document(order.timestamp.toString()).set(cart).addOnSuccessListener {
-                    onAddingSuccess(cart)
+                          //  order.orderId?.let { sendMessageToRestaurant(restaurantId, it) }
+                            onBookingSuccess(order)
+                        }
                 }
-            }
         }
     }
+
+
+    private fun sendMessageToRestaurant(restaurantId: String, orderId: String) {
+        Firebase.firestore.collection(RESTAURANTS_COLLECTION_KEY).document(restaurantId).get()
+            .addOnSuccessListener {
+                val token = it.get(RESTAURANT_TOKEN_FIELD_KEY).toString()
+                val json = JSONObject()
+                json.put(RESTAURANT_TOKEN_FIELD_KEY,token)
+                val data=JSONObject()
+                data.put("title" ,"test")
+                data.put("body","body")
+                json.put("notification",data)
+
+                
+
+
+
+
+
+            }
+
+    }
+
+
+    fun getUniqueId(): String {
+        val alphabet: List<Char> = ('a'..'z') + ('0'..'9') + ('A'..'Z')
+        return List(20) { alphabet.random() }.joinToString(separator = "")
+    }
+
+    private const val RESTAURANTS_COLLECTION_KEY = "restaurants"
+    private const val RESTAURANT_TOKEN_FIELD_KEY = "token"
+    private const val MEALS_COLLECTION_KEY = "meals"
+    private const val RESTAURANT_ID_FIELD_KEY = "restaurantId"
+    private const val ORDERS_COLLECTION_KEY = "orders"
+    private const val FULFILLED_FIELD_KEY = "fulfilled"
+    private const val USERS_COLLECTION_KEY = "users"
+    private const val USER_ID_FIELD_KEY = "id"
 
 
 }

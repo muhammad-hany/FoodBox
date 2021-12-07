@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.ertreby.foodbox.R
-import com.ertreby.foodbox.data.Cart
+import com.ertreby.foodbox.data.FirebaseService
 import com.ertreby.foodbox.data.Meal
 import com.ertreby.foodbox.data.Order
 import com.ertreby.foodbox.databinding.FragmentOrderBinding
@@ -66,16 +66,17 @@ class OrderFragment : Fragment() {
         definePagerWithTaps()
         setCountText()
 
-        viewModel.cart.observe(viewLifecycleOwner){cart->
+        viewModel.order.observe(viewLifecycleOwner){ userOrders->
 
 
             binding.cartButton.setOnClickListener {
-                // getUserCartFromDB()
+
 
                 val bundle = Bundle()
-                bundle.putParcelable("cart", cart)
+                val arrayList= ArrayList(userOrders)
+                bundle.putParcelableArrayList("orders",arrayList)
                 findNavController().navigate(
-                    R.id.action_homeFragment_to_cartFragment, bundle
+                    R.id.action_orderFragment_to_cartFragment, bundle
                 )
             }
         }
@@ -89,8 +90,7 @@ class OrderFragment : Fragment() {
                 }
             }
 
-            val timestamp = System.currentTimeMillis().toString()
-            val order = Order(meal, orderedExtras, orderCount, timestamp)
+            val order=Order(meal,orderedExtras,orderCount,FirebaseService.getUniqueId(), userId = Firebase.auth.currentUser?.uid, fulfilled = false)
 
 
             viewModel.submitOrder(order, ::onOrderSuccess)
@@ -103,9 +103,9 @@ class OrderFragment : Fragment() {
 
     }
 
-    private fun onOrderSuccess(cart: Cart) {
+    private fun onOrderSuccess(order: Order) {
         val bundle = Bundle()
-        bundle.putParcelable("cart", cart)
+        bundle.putParcelable("order", order)
         findNavController().navigate(
             R.id.action_orderFragment_to_cartFragment,
             bundle
@@ -120,7 +120,7 @@ class OrderFragment : Fragment() {
         cartRef.whereEqualTo("isItFulfilled", false).get()
             .addOnSuccessListener { cartsSnapshot ->
                 if (cartsSnapshot.size() > 0) {
-                    val carts = cartsSnapshot.toObjects<Cart>()
+                    val carts = cartsSnapshot.toObjects<Order>()
                     val bundle = Bundle()
                     bundle.putParcelable("cart", carts[0])
                     findNavController().navigate(

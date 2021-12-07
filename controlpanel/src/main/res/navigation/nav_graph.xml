@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_homeFragment_to_menuFragment"
             app:destination="@id/menuFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_ordersFragment"
+            app:destination="@id/ordersFragment" />
     </fragment>
     <fragment
         android:id="@+id/signUpFragment"
@@ -71,7 +74,13 @@
         </action>
     </fragment>
     <fragment
+
         android:id="@+id/menuEditFragment"
         android:name="com.ertreby.controlpanel.MenuEditFragment"
         android:label="MenuEditFragment" />
+    <fragment
+        tools:layout="@layout/fragment_order"
+        android:id="@+id/ordersFragment"
+        android:name="com.ertreby.controlpanel.OrdersFragment"
+        android:label="OrdersFragment" />
 </navigation>

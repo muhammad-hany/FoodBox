@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ertreby.foodbox.data.Cart
 import com.ertreby.foodbox.data.FirebaseService
 import com.ertreby.foodbox.data.Order
 import kotlinx.coroutines.launch
@@ -13,18 +12,18 @@ class OrderViewModel : ViewModel() {
 
 
 
-    private val _cart= MutableLiveData<Cart>()
-    val cart: LiveData<Cart> =_cart
+    private val _order= MutableLiveData<List<Order>>()
+    val order: LiveData<List<Order>> =_order
 
 
     init {
         viewModelScope.launch {
-            _cart.value= FirebaseService.getUserActiveCart()
+            _order.value= FirebaseService.getUserActiveOrders()
         }
     }
 
 
-    fun submitOrder(order: Order, onSubmissionSuccess: (Cart) -> Unit) {
-        FirebaseService.setOrderToActiveCart(order,onSubmissionSuccess)
+    fun submitOrder(order: Order, onSubmissionSuccess: (Order) -> Unit) {
+        FirebaseService.bookOrder(order,onSubmissionSuccess)
     }
 }
