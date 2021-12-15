@@ -12,7 +12,7 @@ the user can browse different meals ordered by meal types or reviews
 
 splash screen build by Motion Layout
 
-<img src="XRecorder_15122021_204407.gif" width="150">
+<img src="/assets/XRecorder_15122021_204407.gif" width="150">
 
 ## Restaurant control Panel app
 the restaurant admin can add , edit or remove meals , and get notified when the restaurant gets an order
