@@ -5,9 +5,9 @@ foodBox is a food delivery app consist of :
 - Firebase server functions
 
 ## Client app 
-the user can browse different meals ordered by meal types or reviews 
-![screenshot_1](/assets/Screenshot_20211215-223523.jpg) ![screenshot_2](/assets/Screenshot_20211215-223554.jpg)
-
+the user can browse different meals ordered by meal types or reviews
+<img src="/assets/Screenshot_20211215-223523.jpg" width="150">
+<img src="/assets/Screenshot_20211215-223554.jpg" width="150">
 
 
 splash screen build by Motion Layout
