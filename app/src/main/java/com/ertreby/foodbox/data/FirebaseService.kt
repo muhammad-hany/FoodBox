@@ -1,6 +1,11 @@
 package com.ertreby.foodbox.data
 
 import android.app.Activity
+import android.content.Context
+import android.util.Log
+import com.android.volley.Request
+import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.Volley
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
@@ -12,7 +17,6 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.tasks.await
-import org.json.JSONObject
 import java.util.concurrent.TimeUnit
 
 object FirebaseService {
@@ -213,25 +217,24 @@ object FirebaseService {
     }
 
 
-    private fun sendMessageToRestaurant(restaurantId: String, orderId: String) {
-        Firebase.firestore.collection(RESTAURANTS_COLLECTION_KEY).document(restaurantId).get()
-            .addOnSuccessListener {
-                val token = it.get(RESTAURANT_TOKEN_FIELD_KEY).toString()
-                val json = JSONObject()
-                json.put(RESTAURANT_TOKEN_FIELD_KEY,token)
-                val data=JSONObject()
-                data.put("title" ,"test")
-                data.put("body","body")
-                json.put("notification",data)
+     fun sendMessageToRestaurant(orderId: String, context: Context) {
 
-                
+        val  url ="https://us-central1-food-box-e9997.cloudfunctions.net/sendRestarantMessage?orderId=$orderId"
+        val queue=Volley.newRequestQueue(context)
+        var responseText:String
+        val stringRequest = StringRequest(Request.Method.GET, url,
 
+            { response ->
 
+                responseText = "Response is: ${response.substring(0, 500)}"
+                Log.v("TAG",responseText)
+            },
+            {
+                responseText = "That didn't work!"
+                Log.v("TAG",responseText)
+            })
 
-
-
-            }
-
+        queue.add(stringRequest)
     }
 
 

@@ -93,7 +93,7 @@ class OrderFragment : Fragment() {
             val order=Order(meal,orderedExtras,orderCount,FirebaseService.getUniqueId(), userId = Firebase.auth.currentUser?.uid, fulfilled = false)
 
 
-            viewModel.submitOrder(order, ::onOrderSuccess)
+            viewModel.submitOrder(order, ::onOrderSuccess,requireContext())
 
 
 

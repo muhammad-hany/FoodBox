@@ -1,5 +1,6 @@
 package com.ertreby.foodbox.viewmodels
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -23,7 +24,8 @@ class OrderViewModel : ViewModel() {
     }
 
 
-    fun submitOrder(order: Order, onSubmissionSuccess: (Order) -> Unit) {
+    fun submitOrder(order: Order, onSubmissionSuccess: (Order) -> Unit , context: Context) {
         FirebaseService.bookOrder(order,onSubmissionSuccess)
+       // order.orderId?.let { FirebaseService.sendMessageToRestaurant(it, context) }
     }
 }
