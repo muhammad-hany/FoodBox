@@ -9,5 +9,6 @@ the user can browse different meals ordered by meal types or reviews
 
 
 splash screen build by Motion Layout
-<img src="XRecorder_15122021_204407.gif" width="48">
+
+<img src="XRecorder_15122021_204407.gif" width="150">
 
