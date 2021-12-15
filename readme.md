@@ -6,6 +6,7 @@ foodBox is a food delivery app consist of :
 
 ## Client app 
 the user can browse different meals ordered by meal types or reviews
+
 <img src="/assets/Screenshot_20211215-223523.jpg" width="150">
 <img src="/assets/Screenshot_20211215-223554.jpg" width="150">
 
