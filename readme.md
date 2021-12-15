@@ -7,5 +7,7 @@ foodBox is a food delivery app consist of :
 ## Client app 
 the user can browse different meals ordered by meal types or reviews 
 
-![splash screen build by Motion Layout](https://github.com/muhammad-hany/FoodBox/blob/master/XRecorder_15122021_204407.gif)
+
+splash screen build by Motion Layout
+<img src="XRecorder_15122021_204407.gif" width="48">
 
